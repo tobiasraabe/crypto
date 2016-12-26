@@ -1,0 +1,69 @@
+#+AUTHOR: Tobias Raabe
+#+TITLE: Cryptocurrency Market Prediction
+
+This is research project's aim is to make predictions of cryptocurrency prices based on time-series data of exchanges, twitter, reddit, etc.. The project's goal is to build an autonomous program which makes portfolio decisions based on a prediction model of cryptocurrency prices.
+
+The project's framework is based on Hans Martin von Gaudecker's "Templates for reproducible research projects". See http://hmgaudecker.github.io/econ-project-templates/ for the full documentation.
+
+* Todo
+
+** Data gathering
+
+*** Gather data from [[https://poloniex.com/]]
+
+  - download ticker data from poloniex API
+
+*** Gather data from [[https://www.reddit.com]]
+
+  |                                          Source                                         | Language | Output |      Summary       |
+  |-----------------------------------------------------------------------------------------+----------+--------+--------------------|
+  | [[https://www.reddit.com/dev/api][reddit API documentation]]                            |          |        |                    |
+  | [[https://github.com/reddit/reddit/wiki/API-Wrappers][List of API Wrappers for reddit]] |          |        |                    |
+  | [[https://github.com/praw-dev/praw][Python Reddit API Wrapper]]                         | Python3  |        | self-explained     |
+  | [[https://github.com/NSchrading/redditDataExtractor][redditDataExtractor]]              | Python3  | JSON   |                    |
+  | [[https://www.import.io/][Import.io]]                                                   |          |        | commercial webpage |
+
+*** Gather data from [[https://twitter.com/]]
+
+  |                                                      Source                                                     | Language | Output |            Summary             |
+  |-----------------------------------------------------------------------------------------------------------------+----------+--------+--------------------------------|
+  | [[https://github.com/tweepy/tweepy][Tweepy]]                                                                    | Python3  |        | Python wrapper for Twitter API |
+  | [[https://github.com/computermacgyver/twitter-python][twitter-python]]                                          | Python3  | JSON   | Sample script based on tweepy  |
+  | [[http://stats.seandolinar.com/collecting-twitter-data-using-a-python-stream-listener/][twitter-python sample]] | Python3  |        | another sample                 |
+
+*** Other sources
+
+  - weather forecasts, etc.
+
+** Data Preparation
+
+** Prediction Model
+
+*** Theory
+
+*** Application
+
+* Literature/Links/etc.
+
+** Deep Learning
+
+  - [[file:literature/DeepLearning.pdf][Deep Learning]] by Goodfellow, Bengio, Courville
+  - [[http://colah.github.io/posts/2015-08-Understanding-LSTMs/][Understanding LSTM Networks]] - short blog post on neural networks, check out his website for more information
+
+** Python Deep Learning Frameworks
+
+*** Comparison
+
+  - [[https://github.com/zer0n/deepframeworks/blob/master/README.md][Comparison of Frameworks]]
+  - [[https://github.com/soumith/convnet-benchmarks][Benchmarks of Frameworks]]
+
+*** [[https://www.tensorflow.org/][TensorFlow]], created by Google, seems to be the right choice for this purpose.
+
+  *Features of Tensorflow*:
+      - Python API
+      - Graph visualisation via TensorBoard
+
+  *Tutorials/Guides*:
+      - [[https://www.tensorflow.org/tutorials/][Tutorials & Guides]]
+      - [[https://www.tensorflow.org/how_tos/][How-Tos]]
+      - [[https://github.com/tgjeon/TensorFlow-Tutorials-for-Time-Series][TensorFlow Time-Series Tutorials]]
