@@ -67,3 +67,16 @@ The project's framework is based on Hans Martin von Gaudecker's "Templates for r
       - [[https://www.tensorflow.org/tutorials/][Tutorials & Guides]]
       - [[https://www.tensorflow.org/how_tos/][How-Tos]]
       - [[https://github.com/tgjeon/TensorFlow-Tutorials-for-Time-Series][TensorFlow Time-Series Tutorials]]
+      - 
+
+
+
+
+
+
+
+** Obtaining Data
+
+https://poloniex.com/public?command=returnTradeHistory&currencyPair=BTC_POT&start=1475303393&end=1483045123
+
+Training data directly obtainable from poloniex website. 50k max between intervals. See example data in BTC_POT.
