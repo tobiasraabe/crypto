@@ -80,8 +80,3 @@ The project's framework is based on Hans Martin von Gaudecker's "Templates for r
 https://poloniex.com/public?command=returnTradeHistory&currencyPair=BTC_POT&start=1475303393&end=1483045123
 
 Training data directly obtainable from poloniex website. 50k max between intervals. See example data in BTC_POT.
-
-
-** Books and maybe job for Tobias
-
-http://pythonquants.com/index.html
