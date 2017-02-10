@@ -18,3 +18,8 @@ pybtex==0.19
 pybtex-docutils==0.2.1
 sphinx-rtd-theme==0.1.7
 sphinxcontrib-bibtex==0.3.3
+# picky added the following on 2017-02-10 11:29:58:
+pluggy==0.4.0
+py==1.4.32
+tox==2.6.0
+virtualenv==15.1.0
