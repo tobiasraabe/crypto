@@ -1,0 +1,8 @@
+# Poloniex configuration file
+
+# This file specifies for which exchange rates a data collection is performed.
+# A list of possible pairs can be found here:
+
+#     https://poloniex.com/public?command=return24hVolume
+
+- BTC_POT

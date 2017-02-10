@@ -1,0 +1,24 @@
+#! python
+
+import yaml
+import os
+
+
+def build(ctx):
+    with open(os.path.join('src', 'data_collection', 'poloniex_config.yml'),
+              'r') as file:
+        config = yaml.load(file.read())
+
+    for pair in config:
+        ctx(
+            features='run_py_script',
+            source='poloniex.py',
+            deps=[
+                ctx.path_to(ctx, 'IN_DATA_COLLECTION', 'poloniex_config.yml')
+            ],
+            target=[
+                ctx.path_to(ctx, 'OUT_DATA_RAW', '{}.csv'.format(pair)),
+                ctx.path_to(ctx, 'OUT_DATA_RAW', '{}.yml'.format(pair)),
+            ],
+            append=pair,
+        )

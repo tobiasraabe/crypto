@@ -14,14 +14,8 @@ def set_project_paths(ctx):
 
     pp = {}
     pp['PROJECT_ROOT'] = '.'
-    pp['IN_DATA'] = 'src/original_data'
-    pp['IN_MODEL_CODE'] = 'src/model_code'
-    pp['IN_MODEL_SPECS'] = 'src/model_specs'
-    pp['OUT_DATA'] = '{}/out/data'.format(out)
-    pp['OUT_ANALYSIS'] = '{}/out/analysis'.format(out)
-    pp['OUT_FINAL'] = '{}/out/final'.format(out)
-    pp['OUT_FIGURES'] = '{}/out/figures'.format(out)
-    pp['OUT_TABLES'] = '{}/out/tables'.format(out)
+    pp['IN_DATA_COLLECTION'] = 'src/data_collection'
+    pp['OUT_DATA_RAW'] = '{}/out/data/raw'.format(out)
 
     # Convert the directories into Waf nodes.
     for key, val in pp.items():
