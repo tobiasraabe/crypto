@@ -7,12 +7,12 @@ import os
 def build(ctx):
     with open(os.path.join('src', 'data_collection', 'poloniex_config.yml'),
               'r') as file:
-        config = yaml.load(file.read())
+        polo_config = yaml.load(file.read())
 
-    for pair in config:
+    for pair in polo_config['EXCHANGES']:
         ctx(
             features='run_py_script',
-            source='poloniex.py',
+            source='poloniex_data.py',
             deps=[
                 ctx.path_to(ctx, 'IN_DATA_COLLECTION', 'poloniex_config.yml')
             ],

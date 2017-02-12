@@ -5,4 +5,7 @@
 
 #     https://poloniex.com/public?command=return24hVolume
 
-- BTC_POT
+START_DATE: 1388530800  # Foundation of Poloniex
+PERIOD: 7776000  # three months
+EXCHANGES:
+  - BTC_POT
