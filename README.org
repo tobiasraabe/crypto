@@ -12,11 +12,13 @@ The project's framework is based on Hans Martin von Gaudecker's "Templates for r
 *** Gather data from [[https://poloniex.com/]]
 
   - download ticker data from poloniex API
+    - https://poloniex.com/public?command=returnTradeHistory&currencyPair=BTC_POT&start=1475303393&end=1483045123
+    - Training data directly obtainable from poloniex website. 50k max between intervals. See example data in BTC_POT.
 
 *** Gather data from [[https://www.reddit.com]]
 
   |                                          Source                                         | Language | Output |      Summary       |
-  |-----------------------------------------------------------------------------------------+----------+--------+--------------------|
+  |-----------------------------------------------------------------------------------------|----------|--------|--------------------|
   | [[https://www.reddit.com/dev/api][reddit API documentation]]                            |          |        |                    |
   | [[https://github.com/reddit/reddit/wiki/API-Wrappers][List of API Wrappers for reddit]] |          |        |                    |
   | [[https://github.com/praw-dev/praw][Python Reddit API Wrapper]]                         | Python3  |        | self-explained     |
@@ -25,11 +27,14 @@ The project's framework is based on Hans Martin von Gaudecker's "Templates for r
 
 *** Gather data from [[https://twitter.com/]]
 
-  |                                                      Source                                                     | Language | Output |            Summary             |
-  |-----------------------------------------------------------------------------------------------------------------+----------+--------+--------------------------------|
-  | [[https://github.com/tweepy/tweepy][Tweepy]]                                                                    | Python3  |        | Python wrapper for Twitter API |
-  | [[https://github.com/computermacgyver/twitter-python][twitter-python]]                                          | Python3  | JSON   | Sample script based on tweepy  |
-  | [[http://stats.seandolinar.com/collecting-twitter-data-using-a-python-stream-listener/][twitter-python sample]] | Python3  |        | another sample                 |
+  |                                                        Source                                                        |  Language | Output |                Summary                |
+  |----------------------------------------------------------------------------------------------------------------------|-----------|--------|---------------------------------------|
+  | [[https://github.com/Jefferson-Henrique/GetOldTweets-python][GetOldTweets scraper]]                                  | Python2   | JSON   | Tweets older than week, more than 72k |
+  | [[http://stackoverflow.com/questions/41684729/anyway-to-increase-twitter-mining-speed][Application of GetOldTweets]] | Python3   | JSON   | Tutorial                              |
+  | [[https://github.com/taspinar/TwitterScraper][TwitterScraper]]                                                       | Python3   | JSON   | Similar to GetOldTweets               |
+  | +[[https://github.com/tweepy/tweepy][Tweepy]]+                                                                       | +Python3+ |        | +Python wrapper for Twitter API+      |
+  | +[[https://github.com/computermacgyver/twitter-python][twitter-python]]+                                             | +Python3+ | +JSON+ | +Sample script based on tweepy+       |
+  | +[[http://stats.seandolinar.com/collecting-twitter-data-using-a-python-stream-listener/][twitter-python sample]]+    | +Python3+ |        | +another sample+                      |
 
 *** Other sources
 
@@ -67,20 +72,6 @@ The project's framework is based on Hans Martin von Gaudecker's "Templates for r
       - [[https://www.tensorflow.org/tutorials/][Tutorials & Guides]]
       - [[https://www.tensorflow.org/how_tos/][How-Tos]]
       - [[https://github.com/tgjeon/TensorFlow-Tutorials-for-Time-Series][TensorFlow Time-Series Tutorials]]
-      - 
-
-
-
-
-
-
-
-** Obtaining Data
-
-https://poloniex.com/public?command=returnTradeHistory&currencyPair=BTC_POT&start=1475303393&end=1483045123
-
-Training data directly obtainable from poloniex website. 50k max between intervals. See example data in BTC_POT.
-
 
 ** Books and maybe job for Tobias
-http://pythonquants.com/index.html#team
++http://pythonquants.com/index.html#team+ (Don't trust people who turned up their collars :))
