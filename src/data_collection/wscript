@@ -2,23 +2,89 @@
 
 import yaml
 import os
+import datetime
+
+
+# YESTERDAY is necessary since the twitter API does not allow to specify
+# hours, etc. and we do not want to skip tweets
+YESTERDAY = (datetime.datetime.utcnow() - datetime.timedelta(days=1)).date()
+TODAY = datetime.datetime.utcnow().date()
+
+if not os.path.exists('bld/out/data/raw'):
+    os.makedirs('bld/out/data/raw')
 
 
 def build(ctx):
-    with open(os.path.join('src', 'data_collection', 'poloniex_config.yml'),
-              'r') as file:
+    # Poloniex builder
+    # Open main poloniex config file
+    with open(os.path.join('src', 'data_collection', 'Poloniex',
+                           'poloniex_config.yml'), 'r') as file:
         polo_config = yaml.load(file.read())
 
-    for pair in polo_config['EXCHANGES']:
+    # Loop over exchange key
+    for key in polo_config:
         ctx(
             features='run_py_script',
-            source='poloniex_data.py',
+            source=os.path.join('Poloniex', 'poloniex_data.py'),
             deps=[
-                ctx.path_to(ctx, 'IN_DATA_COLLECTION', 'poloniex_config.yml')
+                ctx.path_to(
+                    ctx, 'IN_DATA_COLLECTION', 'Poloniex',
+                    'poloniex_config.yml')
             ],
             target=[
-                ctx.path_to(ctx, 'OUT_DATA_RAW', '{}.csv'.format(pair)),
-                ctx.path_to(ctx, 'OUT_DATA_RAW', '{}.yml'.format(pair)),
+                ctx.path_to(
+                    ctx, 'OUT_DATA_RAW', '{}_trade_history.csv'.format(key)),
+                ctx.path_to(
+                    ctx, 'OUT_DATA_RAW', '{}_chart_data.csv'.format(key)),
+                ctx.path_to(ctx, 'OUT_DATA_RAW', '{}.yml'.format(key)),
             ],
-            append=pair,
+            append=key,
         )
+
+    # # Twitter builder
+    # # Open main Twitter config
+    # with open(os.path.join('src', 'data_collection', 'Twitter',
+    #                        'twitter_config.yml'), 'r') as file:
+    #     twitter_config = yaml.load(file.read())
+
+    # # Check if data was downloaded before. If yes, load temporary config and
+    # # adjust ``since`` to ``until`` and check if ``until`` is today, then exit.
+    # # Twitter data is only downloaded till yesterday, because a more
+    # # fine-grained seems not possible up to now.
+    # for query in twitter_config:
+    #     mode = 'w+'
+    #     path_tmp_conf = os.path.join(
+    #         'bld', 'out', 'data', 'raw', '{}.yml'.format(query))
+    #     if os.path.isfile(path_tmp_conf):
+    #         mode = 'a+'
+    #         with open(path_tmp_conf) as file:
+    #             temp = yaml.load(file.read())
+    #             if str(TODAY) == temp['until']:
+    #                 continue
+    #             else:
+    #                 twitter_config['since'] = temp.get('until', '2014-01-01')
+
+    #     ctx(
+    #         features='run_py_script',
+    #         source=os.path.join('Twitter', 'Exporter.py'),
+    #         deps=[
+    #             ctx.path_to(
+    #                 ctx, 'IN_DATA_COLLECTION', 'Twitter', 'twitter_config.yml')
+    #         ],
+    #         target=[
+    #             ctx.path_to(ctx, 'OUT_DATA_RAW', '{}.csv'.format(query)),
+    #             ctx.path_to(ctx, 'OUT_DATA_RAW', '{}.yml'.format(query)),
+    #         ],
+    #         append=(
+    #             ['--' + opt + ' ' + str(twitter_config[query][opt]) if not
+    #              opt.startswith('toptweets') else '--toptweets'
+    #              for opt in twitter_config[query]] +
+    #             ['--filename {}'.format(
+    #                 os.path.join('bld', 'out', 'data', 'raw', query))] +
+    #             ['--mode {}'.format(mode)]
+    #         ),
+    #     )
+
+    #     with open(os.path.join('bld', 'out', 'data', 'raw', '{}.yml'
+    #                            .format(query)), 'w') as file:
+    #         yaml.dump({'until': str(TODAY)}, file)

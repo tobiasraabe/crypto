@@ -5,7 +5,7 @@
 Introduction
 ************
 
-This is the documentation on the *Cryptocurrency Market Prediction* project.
+This is the documentation on the **Cryptocurrency Market Prediction** project.
 
 
 .. _getting_started:

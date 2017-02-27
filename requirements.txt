@@ -23,3 +23,9 @@ pluggy==0.4.0
 py==1.4.32
 tox==2.6.0
 virtualenv==15.1.0
+# picky added the following on 2017-02-16 01:34:14:
+cssselect==1.0.1
+lxml==3.7.2
+poloniex==0.2.2
+pyquery==1.2.17
+requests==2.13.0
