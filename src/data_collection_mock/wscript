@@ -1,0 +1,8 @@
+#!/usr/bin/env python
+
+
+def build(ctx):
+    ctx(
+        features='run_py_script',
+        source='data_collection_mock.py',
+    )
