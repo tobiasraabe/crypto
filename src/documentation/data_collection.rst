@@ -8,14 +8,12 @@ Data Collection
 This chapter of the documentation covers the process collecting data from various sources.
 
 
-.. _poloniex:
+.. _poloniex_:
 
 Poloniex
 ========
 
-`Poloniex`_ is a US-based cryptocurrency exchange and the project's trading place. Poloniex offers a pulbic API which can handles HTTP GET requests and answers via ``json`` data structures.
-
-.. _Poloniex: https://poloniex.com/
+`Poloniex <https://poloniex.com/>`_  is a US-based cryptocurrency exchange and the project's trading place. Poloniex offers a pulbic API which can handles HTTP GET requests and answers via ``json`` data structures.
 
 
 .. _twitter:

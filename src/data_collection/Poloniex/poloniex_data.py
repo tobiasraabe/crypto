@@ -1,10 +1,11 @@
 #!/usr/bin/env python
+
 import datetime
 import os
 import pandas as pd
 import poloniex
-import sys
 import requests
+import sys
 import time
 import yaml
 
@@ -15,26 +16,107 @@ END_DATE = int(datetime.datetime.utcnow().timestamp())
 DELAY = 1
 
 
+def retry_request(func):
+    """Decorator which repeats an API call with ``requests`` in case of an
+    ``requests.exceptions.ReadTimeout``.
+
+    The reason is that requests operation from poloniex sometimes fail, but
+    rerunning the command yields the correct return.
+
+    There are at most five times to receive a valid return.
+
+
+    Parameters
+    ----------
+    func : function
+        Wrapped function using requests
+
+    """
+
+    def wrap(*args, **kwargs):
+        i = 0
+        while i <= 4:
+            try:
+                return func(*args, **kwargs)
+            except requests.exceptions.ReadTimeout:
+                i += 1
+                time.sleep(DELAY)
+                pass
+            else:
+                break
+    return wrap
+
+
 class PoloniexDataManager:
     """This class offers the ability to collect data from the public API of
     Poloniex.
 
+
+    Parameters
+    ----------
+    key : str
+        Poloniex identifier of an exchange
+
+    Attributes
+    ----------
+    multiplicator : int
+        Multiplicator for ``self.period`` which adds a constant upward
+        push.
+
+        Since trades on Poloniex are not constant but highly volatile,
+        ``self.period`` would be too short after a period with unusually
+        many trades. The multiplier helps the interval to regenerate.
+
+    path_config_main : str
+        Path to the main configuration file. Each key in the configuration
+        represents a currency pair which has a ``START_DATE`` and a
+        ``PERIOD``::
+
+            <key>:
+              START_DATE: <int>
+              PERIOD: <int>
+
+
+    Yields
+    ------
+    <key>_trade_history.csv :
+        CSV-file comprising the trade history for a given key
+    <key>_chart_data_csv :
+        CSV-file comprising the chart data for a given key
+
     """
+    multiplicator = 1.1
+    path_config_main = ppj(
+        'IN_DATA_COLLECTION', 'Poloniex', 'poloniex_config.yml')
 
     def __init__(self, key):
+        """
+        Attributes
+        ----------
+        key : str
+            Poloniex identifier of a currency pair
+        path_config_temp : str
+            Path to temporary configuration for a key
+        period : int
+            Time interval in unix time
+        start : int
+            Start point in unix time
+
+        """
+
         self.key = key
-        self.path_config_main = ppj(
-            'IN_DATA_COLLECTION', 'Poloniex', 'poloniex_config.yml')
         self.path_config_temp = ppj('OUT_DATA_RAW', self.key + '.yml')
 
-        self.start = None
         self.period = None
-        self.multiplicator = 1.1
-
-        self.generate_trade_history()
-        self.generate_chart_data()
+        self.start = None
 
     def generate_trade_history(self):
+        """Wraps the entire process of generating the trade history.
+
+
+        """
+
+        # Load configuration
         try:
             with open(self.path_config_temp) as file:
                 config_temp = yaml.load(file.read())
@@ -45,40 +127,45 @@ class PoloniexDataManager:
                 config_main = yaml.load(file.read())
             self.start = config_main[self.key]['START_DATE']
             self.period = config_main[self.key]['PERIOD']
-        finally:
-            print('START: Generating data for {} - Trade History.'
-                  .format(self.key))
-            while True:
-                self.period = self.validate_period(
-                    multiplicator=self.multiplicator)
-                self.gen_th()
-                self.start += self.period
-                if self.start == END_DATE:
-                    break
 
-            self.remove_duplicates('trade_history')
+        # Collect data
+        print('START: Generating data for {} - Trade History.'
+              .format(self.key))
+        while True:
+            self.period = self.validate_period(self.multiplicator)
+            self.gen_th()
+            self.start += self.period
+            if self.start == END_DATE:
+                break
 
-            try:
-                with open(ppj('OUT_DATA_RAW', '{}.yml'
-                              .format(self.key)), 'r+') as file:
-                    temp = yaml.load(file.read())
-                    if temp is None:
-                        raise FileNotFoundError
-                    temp.update(
-                        {'trade_history':
-                         {'END_DATE': self.start, 'PERIOD': self.period}
-                         })
-                    yaml.dump(temp, file)
-            except FileNotFoundError:
-                with open(ppj('OUT_DATA_RAW', '{}.yml'
-                              .format(self.key)), 'w') as file:
-                    yaml.dump(
-                        {'trade_history':
-                         {'END_DATE': self.start, 'PERIOD': self.period}
-                         }, file)
-            print('SUCCESS: Created {} - Trade History'.format(self.key))
+        # Save new configuration
+        try:
+            with open(ppj('OUT_DATA_RAW', '{}.yml'
+                          .format(self.key)), 'r+') as file:
+                temp = yaml.load(file.read())
+                if temp is None:
+                    raise FileNotFoundError
+                temp.update(
+                    {'trade_history':
+                     {'END_DATE': self.start, 'PERIOD': self.period}
+                     })
+                yaml.dump(temp, file)
+        except FileNotFoundError:
+            with open(ppj('OUT_DATA_RAW', '{}.yml'
+                          .format(self.key)), 'w') as file:
+                yaml.dump(
+                    {'trade_history':
+                     {'END_DATE': self.start, 'PERIOD': self.period}
+                     }, file)
+
+        print('SUCCESS: Created {} - Trade History'.format(self.key))
 
     def generate_chart_data(self):
+        """Wraps the entire process of generating chart data.
+
+        """
+
+        # Load configuration
         try:
             with open(self.path_config_temp) as file:
                 config_temp = yaml.load(file.read())
@@ -87,12 +174,13 @@ class PoloniexDataManager:
             with open(self.path_config_main) as file:
                 config_main = yaml.load(file.read())
             self.start = config_main[self.key]['START_DATE']
-        finally:
-            print('START: Generating data for {} - Chart Data'
-                  .format(self.key))
-            self.gen_cd()
-            self.remove_duplicates('chart_data')
 
+        # Collect data
+        print('START: Generating data for {} - Chart Data'
+              .format(self.key))
+        self.gen_cd()
+
+        # Save new configuration
         try:
             with open(ppj('OUT_DATA_RAW', '{}.yml'
                           .format(self.key)), 'r+') as file:
@@ -115,13 +203,30 @@ class PoloniexDataManager:
         items. A constant period cannot adjust to the increasing trade volume
         of Poloniex. Also, invalid API outputs are handled here.
 
-        Note that, if the function corrects ``self.period``, it checks the new
+
+        Notes
+        -----
+        If the function corrects ``self.period``, it checks the new
         value recursively.
+
+        A constant upward push is applied to overcome too small
+        ``self.period``.
+
+        The part of the code which is responsible for checking the number of
+        output elements and adjusting the period uses a simple algorithm to
+        adjust ``self.period``.
+
+
+        Todo
+        ----
+        - Is there general solution for adjusting the period?
+
 
         Parameters
         ----------
-        method_name : str
-            Name of performed method
+        multiplicator : int
+            Constant upward push to ``self.period``
+
 
         Returns
         -------
@@ -134,28 +239,18 @@ class PoloniexDataManager:
 
         polo = poloniex.Poloniex()
 
-        # Hotfix for somehow malformed intervals which return a ReadTimeout
-        # never happened before but now. There must be a difference in code to
-        # the previous commit or it is just bad luck. However, reducing the
-        # interval solves this issue.
-        while True:
-            try:
-                api_out = polo.marketTradeHist(
-                    self.key, start=self.start, end=self.start + self.period)
-            except requests.exceptions.ReadTimeout:
-                self.period = int(self.period * 0.9)
-                print('WARNING: HOTFIX REDUCED INTERVAL')
-            else:
-                break
+        api_out = retry_request(polo.marketTradeHist)(
+            self.key, start=self.start, end=self.start + self.period)
 
-        print('Pair: {}, Start: {}, Period: {}, End: {}, Left: {},'
-              ' No. items: {}'
-              .format(self.key, self.start, self.period,
-                      self.start + self.period,
-                      END_DATE - self.start - self.period, len(api_out)))
+        # print('Pair: {}, Start: {}, Period: {}, End: {}, Left: {},'
+        #       ' No. items: {}'
+        #       .format(self.key, self.start, self.period,
+        #               self.start + self.period,
+        #               END_DATE - self.start - self.period, len(api_out)))
 
         time.sleep(DELAY)
 
+        # Algorithm to adjust ``self.period``
         if self.start + self.period == END_DATE:
             return self.period
 
@@ -192,22 +287,19 @@ class PoloniexDataManager:
             return self.period
 
     def gen_th(self):
-        """Recieves a valid API call and writes ``DataFrame`` to disk.
-
-        Parameters
-        ----------
-        pair : str
-            Exchange key
+        """Handles the return from a valid API call to get the trade history
+        and appends the data to an existing file or creates a new one.
 
         """
+
         polo = poloniex.Poloniex()
         path_data = ppj(
             'OUT_DATA_RAW', self.key + '_trade_history.csv')
 
-        df = pd.DataFrame(polo.marketTradeHist(
-            self.key,
-            start=self.start,
-            end=self.start + self.period)
+        df = pd.DataFrame(
+            retry_request(
+                polo.marketTradeHist)(
+                self.key, start=self.start, end=self.start + self.period)
         )
 
         time.sleep(DELAY)
@@ -223,24 +315,19 @@ class PoloniexDataManager:
                 file, index=False, header=header_bool, columns=df.columns)
 
     def gen_cd(self):
+        """Handles the return from a valid API call to get the chart data
+        and appends the data to an existing file or creates a new one.
+
+        """
+
         polo = poloniex.Poloniex()
         path_data = ppj('OUT_DATA_RAW', self.key + '_chart_data.csv')
 
-        # Hotfix for somehow malformed intervals which return a ReadTimeout
-        # never happened before but now. There must be a difference in code to
-        # the previous commit or it is just bad luck. However, reducing the
-        # interval or trying again solves this issue.
-        while True:
-            try:
-                api_out = polo.returnChartData(
-                    self.key, period=300, start=self.start, end=END_DATE)
-            except requests.exceptions.ReadTimeout:
-                print('WARNING: HOTFIX CATCHED ERROR. CONTINUE')
-                continue
-            else:
-                break
-
-        df = pd.DataFrame(api_out)
+        df = pd.DataFrame(
+            retry_request(
+                polo.returnChartData)(
+                self.key, period=300, start=self.start, end=END_DATE)
+        )
 
         time.sleep(DELAY)
 
@@ -254,28 +341,12 @@ class PoloniexDataManager:
             df.to_csv(
                 file, index=False, header=header_bool, columns=df.columns)
 
-    def remove_duplicates(self, method_name: str):
-        """Cleans the dataset after generation.
-
-        """
-        if method_name == 'trade_history':
-            subset = 'globalTradeID'
-        elif method_name == 'chart_data':
-            subset = 'date'
-
-        path_data = ppj(
-            'OUT_DATA_RAW', self.key + '_' + method_name + '.csv')
-        df = pd.read_csv(path_data, index_col=0)
-
-        df.drop_duplicates(subset=subset, inplace=True)
-        df.sort_values(subset, axis=0, inplace=True)
-
-        path_data = ppj(
-            'OUT_DATA_RAW', self.key + '_' + method_name + '.csv')
-        df.to_csv(path_data)
+    def __call__(self):
+        self.generate_trade_history()
+        self.generate_chart_data()
 
 
 if __name__ == '__main__':
     key = sys.argv[1]
 
-    PoloniexDataManager(key)
+    PoloniexDataManager(key)()
