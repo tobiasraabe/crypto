@@ -1,0 +1,74 @@
+#!/usr/bin/env python
+
+import os
+import yaml
+
+
+PATH_DATA_PROCESSED = os.path.join('bld', 'out', 'data_processed')
+
+
+def build(ctx):
+
+    # Collect keys of Poloniex data
+    with open(os.path.join('src', 'data_collection', 'Poloniex',
+                           'poloniex_config.yml'), 'r') as file:
+        polo_config = yaml.load(file.read())
+
+    # Run chart data preprocessing
+    for key in polo_config.keys():
+
+        ctx(
+            features='run_py_script',
+            source='data_preprocessing_chart_data.py',
+            deps=[
+                ctx.path_to(
+                    ctx, 'OUT_DATA_RAW', '{}_chart_data.csv'.format(key)),
+            ],
+            target=[
+                ctx.path_to(
+                    ctx, 'OUT_DATA_PROCESSED', '{}_chart_data.p'.format(key)),
+            ],
+            append=key,
+            name='preprocessing_{}_chart_data'.format(key)
+        )
+
+    # Run trade history preprocessing
+    for key in polo_config.keys():
+
+        ctx(
+            features='run_py_script',
+            source='data_preprocessing_trade_history.py',
+            deps=[
+                ctx.path_to(
+                    ctx, 'OUT_DATA_RAW', '{}_trade_history.csv'.format(key)),
+            ],
+            target=[
+                ctx.path_to(
+                    ctx, 'OUT_DATA_PROCESSED',
+                    '{}_trade_history.p'.format(key)),
+            ],
+            append=key,
+            name='preprocessing_{}_trade_history'.format(key)
+        )
+
+    # Merge depends on all previous processed data
+    ctx.add_group()
+
+    for key in polo_config.keys():
+
+        ctx(
+            features='run_py_script',
+            source='data_preprocessing_merge.py',
+            deps=[
+                ctx.path_to(
+                    ctx, 'OUT_DATA_PROCESSED', '{}_chart_data.p'.format(key)),
+                ctx.path_to(
+                    ctx, 'OUT_DATA_PROCESSED',
+                    '{}_trade_history.p'.format(key))
+            ],
+            target=[
+                ctx.path_to(ctx, 'OUT_DATA_PROCESSED', '{}.p'.format(key)),
+            ],
+            append=key,
+            name='preprocessing_merge_{}'.format(key)
+        )
