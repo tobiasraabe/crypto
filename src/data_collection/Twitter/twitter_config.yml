@@ -20,10 +20,10 @@ potcoin:
   since: '2014-01-01'
   querysearch: 'potcoin'
   toptweets: ''
-  maxtweets: 100
+  # maxtweets: 100
 
 bitcoin:
   since: '2014-01-01'
   querysearch: 'bitcoin'
   toptweets: ''
-  maxtweets: 100
+  # maxtweets: 100

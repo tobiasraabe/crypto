@@ -1,0 +1,3 @@
+[submodule "src/data_collection/Twitter/GetOldTweets-python"]
+	path = src/data_collection/Twitter/GetOldTweets-python
+	url = https://github.com/tobiasraabe/GetOldTweets-python
