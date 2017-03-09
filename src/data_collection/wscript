@@ -9,9 +9,71 @@ import datetime
 # hours, etc. and we do not want to skip tweets
 YESTERDAY = (datetime.datetime.utcnow() - datetime.timedelta(days=1)).date()
 TODAY = datetime.datetime.utcnow().date()
+PATH_DATA_RAW = os.path.join('bld', 'out', 'data_raw')
 
-if not os.path.exists(os.path.join('bld', 'out', 'data_raw')):
-    os.makedirs(os.path.join('bld', 'out', 'data_raw'))
+
+if not os.path.exists(PATH_DATA_RAW):
+    os.makedirs(PATH_DATA_RAW)
+
+
+def twitter_timeframe(indicator: str, start: str) -> list:
+    date = datetime.datetime.strptime(start, '%Y-%m-%d')
+    arr = []
+
+    for year in range(date.year, 2018):
+        arr += halves(year)
+
+    # if indicator in ['bitcoin']:
+    #     for year in range(date.year, 2016):
+    #         arr += halves(year)
+
+    #     for year in range(2016, 2018):
+    #         arr += weeks(year)
+
+    # elif indicator in ['potcoin']:
+    #     for year in range(date.year, 2018):
+    #         arr += halves(year)
+
+    return arr
+
+
+def halves(year: int) -> list:
+    arr = []
+
+    if year == 2017:
+        arr.append((
+            str(datetime.date(year, 1, 1)), str(datetime.date(year, 6, 30)),
+            '{}_1_partial'.format(year)
+        ))
+    else:
+        arr.append((
+            str(datetime.date(year, 1, 1)), str(datetime.date(year, 6, 30)),
+            '{}_1'.format(year)
+        ))
+        arr.append((
+            str(datetime.date(year, 6, 30)), str(datetime.date(year, 12, 31)),
+            '{}_2'.format(year)
+        ))
+
+    return arr
+
+
+def weeks(year: int) -> list:
+    arr = []
+    date = datetime.date(year, 1, 1)
+
+    while date < YESTERDAY:
+        arr.append((
+            str(date), str(date + datetime.timedelta(weeks=1)),
+            '{}_{}'.format(year, date.isocalendar()[1])
+        ))
+        date += datetime.timedelta(weeks=1)
+    arr.append((
+        str(date), str(YESTERDAY),
+        '{}_{}_partial'.format(year, date.isocalendar()[1])
+    ))
+
+    return arr
 
 
 def build(ctx):
@@ -41,51 +103,67 @@ def build(ctx):
             append=key,
         )
 
-    # Twitter builder
-    # Open main Twitter config
-    with open(os.path.join('src', 'data_collection', 'Twitter',
-                           'twitter_config.yml'), 'r') as file:
-        twitter_config = yaml.load(file.read())
+    # # Twitter builder
+    # # Open main Twitter config
+    # path_config_main = os.path.join(
+    #     'src', 'data_collection', 'Twitter', 'twitter_config.yml')
 
-    # Check if data was downloaded before. If yes, load temporary config and
-    # adjust ``since`` to ``until`` and check if ``until`` is today, then exit.
-    # Twitter data is only downloaded till yesterday, because a more
-    # fine-grained seems not possible up to now.
-    for query in twitter_config:
-        mode = 'w+'
-        path_tmp_conf = os.path.join(
-            'bld', 'out', 'data_raw', '{}.yml'.format(query))
-        if os.path.isfile(path_tmp_conf):
-            mode = 'a+'
-            with open(path_tmp_conf) as file:
-                temp = yaml.load(file.read())
-                if str(TODAY) == temp['until']:
-                    continue
-                else:
-                    twitter_config['since'] = temp.get('until', '2014-01-01')
+    # with open(path_config_main, 'r') as file:
+    #     twitter_config_main = yaml.load(file.read())
 
-        ctx(
-            features='run_py_script',
-            source=os.path.join(
-                'GetOldTweets-python', 'Twitter', 'Exporter.py'),
-            deps=[
-                ctx.path_to(
-                    ctx, 'IN_DATA_COLLECTION', 'Twitter', 'twitter_config.yml')
-            ],
-            target=[
-                ctx.path_to(ctx, 'OUT_DATA_RAW', '{}.csv'.format(query)),
-                ctx.path_to(ctx, 'OUT_DATA_RAW', '{}.yml'.format(query)),
-            ],
-            append=(
-                ['--' + opt + ' ' + str(twitter_config[query][opt]) if not
-                 opt.startswith('toptweets') else '--toptweets'
-                 for opt in twitter_config[query]] +
-                ['--filename {}'.format(
-                    os.path.join('bld', 'out', 'data', 'raw', query))] +
-                ['--mode {}'.format(mode)]
-            ),
-        )
+    # # Check if data was downloaded before. If yes, load temporary config and
+    # # adjust ``since`` to ``until`` and check if ``until`` is today, then exit.
+    # # Twitter data is only downloaded till yesterday, because a more
+    # # fine-grained seems not possible up to now.
+    # for query in twitter_config_main:
+    #     query_conf = twitter_config_main[query]
 
-        with open(os.path.join('bld', 'out', 'data_raw', '{}.yml'
-                               .format(query)), 'w') as file:
-            yaml.dump({'until': str(TODAY)}, file)
+    #     path_config_temp = os.path.join(
+    #         PATH_DATA_RAW, 'twitter_{}.yml'.format(query))
+
+    #     try:
+    #         with open(path_config_temp) as file:
+    #             query_conf['since'] = yaml.load(file.read()).get('until')
+    #     finally:
+    #         mode = 'w+'
+    #         if query_conf['since'] == str(YESTERDAY):
+    #             break
+
+    #     for start, end, suffix in twitter_timeframe(query,
+    #                                                 query_conf['since']):
+
+    #         query_conf['since'] = start
+    #         query_conf['until'] = end
+
+    #         ctx(
+    #             features='run_py_script',
+    #             source=os.path.join(
+    #                 'Twitter', 'GetOldTweets-python', 'Exporter.py'),
+    #             deps=[
+    #                 ctx.path_to(
+    #                     ctx, 'IN_DATA_COLLECTION', 'Twitter',
+    #                     'twitter_config.yml')
+    #             ],
+    #             target=[
+    #                 ctx.path_to(
+    #                     ctx, 'OUT_DATA_RAW', 'twitter_{}_{}.csv'.format(
+    #                         query, suffix)),
+    #                 ctx.path_to(
+    #                     ctx, 'OUT_DATA_RAW', 'twitter_{}.yml'.format(query)),
+    #             ],
+    #             append=(
+    #                 ['--' + opt + ' ' + str(query_conf[opt]) if not
+    #                  opt.startswith('toptweets') else '--toptweets'
+    #                  for opt in query_conf] +
+    #                 ['--filename {}'.format(
+    #                     os.path.join(
+    #                         'out', 'data_raw',
+    #                         'twitter_' + query + '_' + suffix))
+    #                  ] +
+    #                 ['--mode {}'.format(mode)]
+    #             ),
+    #         )
+
+    #     with open(os.path.join(PATH_DATA_RAW, 'twitter_{}.yml'
+    #                            .format(query)), 'w') as file:
+    #         yaml.dump({'until': str(YESTERDAY)}, file)

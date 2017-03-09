@@ -76,7 +76,7 @@ class PoloniexDataManager:
                         {'trade_history':
                          {'END_DATE': self.start, 'PERIOD': self.period}
                          }, file)
-            print('SUCCESS: Created {}-trade_history'.format(self.key))
+            print('SUCCESS: Created {} - Trade History'.format(self.key))
 
     def generate_chart_data(self):
         try:
@@ -106,7 +106,7 @@ class PoloniexDataManager:
                           .format(self.key)), 'w') as file:
                 yaml.dump({'chart_data': {'END_DATE': END_DATE}}, file)
 
-            print('SUCCESS: Created {}-chart_data'.format(self.key))
+        print('SUCCESS: Created {} - Chart Data'.format(self.key))
 
     def validate_period(self, multiplicator=1) -> int:
         """The function validates the period for an API call.
