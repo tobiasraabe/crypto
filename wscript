@@ -15,7 +15,10 @@ def set_project_paths(ctx):
     pp = {}
     pp['PROJECT_ROOT'] = '.'
     pp['IN_DATA_COLLECTION'] = 'src/data_collection'
-    pp['OUT_DATA_RAW'] = '{}/out/data_raw'.format(out)
+    pp['IN_DATA_COLLECTION_MOCK'] = 'src/data_collection_mock'
+    pp['IN_DATA_PREPROCESSING'] = 'src/data_preprocessing'
+    pp['OUT_DATA_RAW'] = '{}/out/data_raw'.format(out)  # Does not work!!!
+    pp['OUT_DATA_PROCESSED'] = '{}/out/data_processed'.format(out)
 
     # Convert the directories into Waf nodes.
     for key, val in pp.items():
