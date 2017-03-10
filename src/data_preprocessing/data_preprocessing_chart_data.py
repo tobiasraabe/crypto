@@ -6,6 +6,7 @@ import sys
 import yaml
 
 from bld.project_paths import project_paths_join as ppj
+from sklearn.externals import joblib
 
 
 def dateparse(time_in_secs):
@@ -25,6 +26,23 @@ def create_lags(ts, lags=1):
 
 
 def main(key: str, lags: int):
+    """Preprocesses the chart data for a given currency pair. Furthermore,
+    a number of lags is computed according to the argument.
+
+    Parameters
+    ----------
+    key : str
+        Poloniex identifier of a currency pair
+    lags : int
+        Number of computed lags
+
+    Yields
+    ------
+    ts : pd.DataFrame
+        Pickled and compressed DataFrame
+
+    """
+
     # Load dataset
     ts = pd.read_csv(
         ppj('OUT_DATA_RAW', '{}_chart_data.csv'.format(key)), parse_dates=True,
@@ -35,18 +53,19 @@ def main(key: str, lags: int):
     ts = ts[~ ts.index.duplicated()]
 
     # Create lagged variables
-    ts_lagged = create_lags(ts.drop('close', axis=1))
+    ts_lagged = create_lags(ts.drop('close', axis=1), lags)
 
     # Concat lagged independent variables and drop NANs
     ts = pd.concat([ts.close, ts_lagged], axis=1).dropna()
 
     # Make column names uppercase and append key
     ts.columns = map(str.upper, ts.columns)
-    ts = ts.add_prefix(key)
+    ts = ts.add_prefix('{}_'.format(key))
 
     # Save dataset
-    ts.to_pickle(
-        ppj('OUT_DATA_PROCESSED', key + '_chart_data.p'))
+    joblib.dump(
+        ts, filename=ppj('OUT_DATA_PROCESSED', key + '_chart_data.p.lzma'),
+        compress=('lzma', 3))
 
 
 if __name__ == '__main__':

@@ -55,7 +55,7 @@ class PoloniexDataManager:
     Parameters
     ----------
     key : str
-        Poloniex identifier of an exchange
+        Poloniex identifier of a currency pair
 
     Attributes
     ----------

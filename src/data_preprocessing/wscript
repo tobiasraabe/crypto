@@ -22,11 +22,14 @@ def build(ctx):
             source='data_preprocessing_chart_data.py',
             deps=[
                 ctx.path_to(
+                    ctx, 'IN_DATA_PREPROCESSING', 'data_preprocessing.yml'),
+                ctx.path_to(
                     ctx, 'OUT_DATA_RAW', '{}_chart_data.csv'.format(key)),
             ],
             target=[
                 ctx.path_to(
-                    ctx, 'OUT_DATA_PROCESSED', '{}_chart_data.p'.format(key)),
+                    ctx, 'OUT_DATA_PROCESSED', '{}_chart_data.p.lzma'
+                    .format(key)),
             ],
             append=key,
             name='preprocessing_{}_chart_data'.format(key)
@@ -40,12 +43,14 @@ def build(ctx):
             source='data_preprocessing_trade_history.py',
             deps=[
                 ctx.path_to(
+                    ctx, 'IN_DATA_PREPROCESSING', 'data_preprocessing.yml'),
+                ctx.path_to(
                     ctx, 'OUT_DATA_RAW', '{}_trade_history.csv'.format(key)),
             ],
             target=[
                 ctx.path_to(
                     ctx, 'OUT_DATA_PROCESSED',
-                    '{}_trade_history.p'.format(key)),
+                    '{}_trade_history.p.lzma'.format(key)),
             ],
             append=key,
             name='preprocessing_{}_trade_history'.format(key)
@@ -61,13 +66,15 @@ def build(ctx):
             source='data_preprocessing_merge.py',
             deps=[
                 ctx.path_to(
-                    ctx, 'OUT_DATA_PROCESSED', '{}_chart_data.p'.format(key)),
+                    ctx, 'OUT_DATA_PROCESSED', '{}_chart_data.p.lzma'
+                    .format(key)),
                 ctx.path_to(
                     ctx, 'OUT_DATA_PROCESSED',
-                    '{}_trade_history.p'.format(key))
+                    '{}_trade_history.p.lzma'.format(key))
             ],
             target=[
-                ctx.path_to(ctx, 'OUT_DATA_PROCESSED', '{}.p'.format(key)),
+                ctx.path_to(
+                    ctx, 'OUT_DATA_PROCESSED', '{}.p.lzma'.format(key)),
             ],
             append=key,
             name='preprocessing_merge_{}'.format(key)

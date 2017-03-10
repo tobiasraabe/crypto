@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
-import sys
-import pandas as pd
 import datetime
+import pandas as pd
+import sys
+
 from bld.project_paths import project_paths_join as ppj
+from sklearn.externals import joblib
 
 
 def dateparse(datetime_str):
@@ -24,11 +26,14 @@ def main(key: str):
 
     # Make column names uppercase and append key
     ts.columns = map(str.upper, ts.columns)
-    ts = ts.add_prefix(key)
+    ts = ts.add_prefix('{}_'.format(key))
 
     # Save as pickle
-    ts.to_pickle(
-        ppj('OUT_DATA_PROCESSED', '{}_trade_history.p'.format(key)))
+    joblib.dump(
+        ts,
+        filename=ppj(
+            'OUT_DATA_PROCESSED', '{}_trade_history.p.lzma'.format(key)),
+        compress=('lzma', 3))
 
 
 if __name__ == '__main__':
