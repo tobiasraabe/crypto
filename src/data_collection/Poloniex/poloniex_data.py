@@ -264,6 +264,7 @@ class PoloniexDataManager:
             self.period = 2592000 * 10
             return self.validate_period()
 
+        # Safety measure: happens if period longer than year and else..?
         elif type(api_out) is dict:
             print('ERROR: FATAL ERROR')
             sys.exit(1)

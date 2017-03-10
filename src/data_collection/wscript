@@ -77,6 +77,16 @@ def weeks(year: int) -> list:
 
 
 def build(ctx):
+    # Tests
+    ctx(
+        features='run_py_script',
+        source=os.path.join('Poloniex', 'test_poloniex_data.py'),
+        deps=ctx.path_to(
+            ctx, 'IN_DATA_COLLECTION', 'Poloniex', 'poloniex_data.py')
+    )
+
+    ctx.add_group()
+
     # Poloniex builder
     # Open main poloniex config file
     with open(os.path.join('src', 'data_collection', 'Poloniex',
@@ -167,3 +177,4 @@ def build(ctx):
     #     with open(os.path.join(PATH_DATA_RAW, 'twitter_{}.yml'
     #                            .format(query)), 'w') as file:
     #         yaml.dump({'until': str(YESTERDAY)}, file)
+
