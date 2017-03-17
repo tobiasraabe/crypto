@@ -19,7 +19,7 @@ def build(ctx):
 
         ctx(
             features='run_py_script',
-            source='data_preprocessing_chart_data.py',
+            source='poloniex_chart_data.py',
             deps=[
                 ctx.path_to(
                     ctx, 'IN_DATA_PREPROCESSING', 'data_preprocessing.yml'),
@@ -32,7 +32,7 @@ def build(ctx):
                     .format(key)),
             ],
             append=key,
-            name='preprocessing_{}_chart_data'.format(key)
+            name='poloniex_{}_chart_data'.format(key)
         )
 
     # Run trade history preprocessing
@@ -40,7 +40,7 @@ def build(ctx):
 
         ctx(
             features='run_py_script',
-            source='data_preprocessing_trade_history.py',
+            source='poloniex_trade_history.py',
             deps=[
                 ctx.path_to(
                     ctx, 'IN_DATA_PREPROCESSING', 'data_preprocessing.yml'),
@@ -53,7 +53,7 @@ def build(ctx):
                     '{}_trade_history.p.lzma'.format(key)),
             ],
             append=key,
-            name='preprocessing_{}_trade_history'.format(key)
+            name='poloniex_{}_trade_history'.format(key)
         )
 
     # Merge depends on all previous processed data
@@ -63,7 +63,7 @@ def build(ctx):
 
         ctx(
             features='run_py_script',
-            source='data_preprocessing_merge.py',
+            source='poloniex_merge.py',
             deps=[
                 ctx.path_to(
                     ctx, 'OUT_DATA_PROCESSED', '{}_chart_data.p.lzma'
@@ -77,5 +77,16 @@ def build(ctx):
                     ctx, 'OUT_DATA_PROCESSED', '{}.p.lzma'.format(key)),
             ],
             append=key,
-            name='preprocessing_merge_{}'.format(key)
+            name='poloniex_merge_{}'.format(key)
         )
+
+    # Stanford twitter sentiment corpus
+    ctx(
+        features='run_py_script',
+        source='twitter_stanford.py',
+        deps=ctx.path_to(
+            ctx, 'OUT_DATA_RAW', 'stanford_twitter_sentiment_corpus.csv'),
+        target=ctx.path_to(
+            ctx, 'OUT_DATA_PROCESSED', 'twitter_stanford.p.lzma'),
+        name='twitter_stanford'
+    )

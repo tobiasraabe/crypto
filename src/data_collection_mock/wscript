@@ -5,4 +5,8 @@ def build(ctx):
     ctx(
         features='run_py_script',
         source='data_collection_mock.py',
+        deps=ctx.path_to(
+            ctx, 'IN_STATIC', 'stanford_twitter_sentiment_corpus.zip'),
+        target=ctx.path_to(
+            ctx, 'OUT_DATA_RAW', 'stanford_twitter_sentiment_corpus.csv')
     )

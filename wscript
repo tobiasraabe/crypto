@@ -19,6 +19,7 @@ def set_project_paths(ctx):
     pp['IN_DATA_PREPROCESSING'] = 'src/data_preprocessing'
     pp['OUT_DATA_RAW'] = '{}/out/data_raw'.format(out)  # Does not work!!!
     pp['OUT_DATA_PROCESSED'] = '{}/out/data_processed'.format(out)
+    pp['IN_STATIC'] = 'src/static'
 
     # Convert the directories into Waf nodes.
     for key, val in pp.items():
