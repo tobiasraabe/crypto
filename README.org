@@ -5,6 +5,16 @@ This is research project's aim is to make predictions of cryptocurrency prices b
 
 The project's framework is based on Hans Martin von Gaudecker's "Templates for reproducible research projects". See http://hmgaudecker.github.io/econ-project-templates/ for the full documentation.
 
+
+* Installation & Usage
+
+  - ``git clone https://github.com/tobiasraabe/crypto.git`` - clone the repo
+  - ``cd crypto`` - Enter crypto folder
+  - ``python update.py`` - recursively update submodules
+  - ``python download_statics.py`` - download statics from dropbox
+  - Execture *Waf* with ``python waf.py configure``, ``build``, ``install``, ``distclean``
+
+
 * Todo
 
 ** Data gathering

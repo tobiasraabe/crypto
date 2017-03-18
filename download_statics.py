@@ -4,29 +4,34 @@
 
 """
 
+import os
 import urllib.request
 import zipfile
 
 
-URL = 'https://www.dropbox.com/sh/zj5djqsum7dzrqp/AABKD3nb5WfKn0h-GtvvFpD7a?dl=0'
+URL = (
+    'https://www.dropbox.com/sh/zj5djqsum7dzrqp/AABKD3nb5WfKn0h'
+    '-GtvvFpD7a?dl=1')
+PATH_STATIC = os.path.join('src', 'static')
+PATH_DOWNLOAD = os.path.join('src', 'static', 'statics.zip')
 
 
 def download_data():
-    u = urllib.request.urlopen(url)
-    data = u.read()
-    u.close()
+    request = urllib.request.urlopen(URL)
+    data = request.read()
+    request.close()
 
-    with open('statics.zip', 'wb') as f:
+    with open(PATH_DOWNLOAD, 'wb') as f:
         f.write(data)
 
 
 def unzip_data():
-    with zipfile.ZipFile(os.path.join('statics.zip')) as zf:
-        zf.extractall(os.path.join('src', 'statics'))
+    with zipfile.ZipFile(PATH_DOWNLOAD) as zf:
+        zf.extractall(PATH_STATIC)
 
 
 def clean_up():
-    os.remove(os.path.join('statics.zip'))
+    os.remove(PATH_DOWNLOAD)
 
 
 def main():
