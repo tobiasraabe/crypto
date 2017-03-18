@@ -73,5 +73,6 @@ The project's framework is based on Hans Martin von Gaudecker's "Templates for r
       - [[https://www.tensorflow.org/how_tos/][How-Tos]]
       - [[https://github.com/tgjeon/TensorFlow-Tutorials-for-Time-Series][TensorFlow Time-Series Tutorials]]
 
-** Books and maybe job for Tobias
-+http://pythonquants.com/index.html#team+ (Don't trust people who turned up their collars :))
+** Reduce weight of the repository
+
+https://rtyley.github.io/bfg-repo-cleaner/ - Removes large files from git repositories
