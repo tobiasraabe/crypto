@@ -8,11 +8,12 @@ The project's framework is based on Hans Martin von Gaudecker's "Templates for r
 
 * Installation & Usage
 
-  - ``git clone https://github.com/tobiasraabe/crypto.git`` - clone the repo
-  - ``cd crypto`` - Enter crypto folder
-  - ``python update.py`` - recursively update submodules
-  - ``python download_statics.py`` - download statics from dropbox
-  - Execture *Waf* with ``python waf.py configure``, ``build``, ``install``, ``distclean``
+  - ~git clone --recursive https://github.com/tobiasraabe/crypto.git~ - clone the repo
+    - If you forgot to include ~--recursive~ while cloning type ~git submodule update --init~
+  - ~cd crypto~ - Enter crypto folder
+  - ~python update.py~ - recursively update submodules
+  - ~python download_statics.py~ - download statics from dropbox
+  - Execture *Waf* with ~python waf.py configure~, ~build~, ~install~, ~distclean~
 
 
 * Todo

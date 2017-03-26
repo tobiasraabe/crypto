@@ -3,6 +3,7 @@
 import numpy as np
 import os
 import pytest
+import requests
 
 from src.data_collection.Poloniex import poloniex_data
 
@@ -41,6 +42,27 @@ def manager(monkeypatch, request):
 ], indirect=['manager', 'mock_retry_request'])
 def test_validate_period(manager, mock_retry_request, expected):
     assert manager.validate_period() == expected
+
+
+# def exception_raiser(arr: list):
+#     return arr.pop(0)
+
+
+# @pytest.mark.parametrize('arr', [
+#     ([requests.exceptions.ReadTimeout] * 2 + [1]),
+#     ([requests.exceptions.ReadTimeout] * 3 + [1]),
+#     ([requests.exceptions.ReadTimeout] * 4 + [1]),
+# ])
+# def test_retry_request_valid(arr):
+#     assert poloniex_data.retry_request(exception_raiser)(arr) == arr[-1]
+
+
+# @pytest.mark.parametrize('arr', [
+#     ([requests.exceptions.ReadTimeout] * 5),
+# ])
+# def test_retry_request_errors(arr):
+#     with pytest.raises(requests.exceptions.ReadTimeout):
+#         poloniex_data.retry_request(exception_raiser)(arr)
 
 
 if __name__ == '__main__':

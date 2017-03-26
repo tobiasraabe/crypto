@@ -1,12 +1,19 @@
 #!/usr/bin/env python
 
+import os
+
+
+PATH_TWITTER_CONFIG_MAIN = os.path.join(
+    'src', 'data_collection', 'Twitter', 'twitter_config.yml')
+
 
 def build(ctx):
+
     ctx(
         features='run_py_script',
         source='data_collection_mock.py',
         deps=ctx.path_to(
             ctx, 'IN_STATIC', 'stanford_twitter_sentiment_corpus.zip'),
         target=ctx.path_to(
-            ctx, 'OUT_DATA_RAW', 'stanford_twitter_sentiment_corpus.csv')
+            ctx, 'OUT_DATA_RAW', 'stanford_twitter_sentiment_corpus.csv'),
     )

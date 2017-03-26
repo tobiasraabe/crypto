@@ -11,5 +11,7 @@ Welcome to the Cryptocurrency Market Prediction project's documentation!
     :maxdepth: 2
 
     introduction
+    installation
     paper
     references
+    credits

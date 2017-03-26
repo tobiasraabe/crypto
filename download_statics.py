@@ -10,8 +10,8 @@ import zipfile
 
 
 URL = (
-    'https://www.dropbox.com/sh/zj5djqsum7dzrqp/AABKD3nb5WfKn0h'
-    '-GtvvFpD7a?dl=1')
+    'https://www.dropbox.com/sh/lb0nn5p4olrm8ka/AAD_KDV_G6o0AHW7hqRmJiZba?dl=1'
+)
 PATH_STATIC = os.path.join('src', 'static')
 PATH_DOWNLOAD = os.path.join('src', 'static', 'statics.zip')
 

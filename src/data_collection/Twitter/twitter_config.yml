@@ -11,17 +11,33 @@
 #   since: '2017-01-01' ('YYYY-MM-DD')
 #   until: '2017-01-31' ('YYYY-MM-DD')
 #   querysearch: "valentine"
-#   toptweets: True
 #   maxtweets: 100 (all if nothing)
 #   near: Bonn,Germany
 #   within: 30km (15mi is also possible)
+#   mode: "w+" or "a"
+#   min_retweets: minimum number of retweets
+#   min_faves: minimum number of faves for embedded youtube videos
+
 
 potcoin:
   since: '2014-01-01'
   querysearch: 'potcoin'
-  toptweets: ''
 
 bitcoin:
-  since: '2014-01-01'
+  since: '2017-03-19'
   querysearch: 'bitcoin'
-  toptweets: ''
+  min_retweets: 1
+  mode: a
+
+cryptocurrency:
+  since: '2017-03-19'
+  querysearch: 'cryptocurrency'
+  min_retweets: 1
+  mode: a
+
+legalize:
+  since: '2017-03-19'
+  querysearch: '"legalize marijuana"'
+  min_retweets: 1
+  mode: a
+
