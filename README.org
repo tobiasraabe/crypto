@@ -38,14 +38,15 @@ The project's framework is based on Hans Martin von Gaudecker's "Templates for r
 
 *** Gather data from [[https://twitter.com/]]
 
-  |                                                        Source                                                        |  Language | Output |                Summary                |
-  |----------------------------------------------------------------------------------------------------------------------|-----------|--------|---------------------------------------|
-  | [[https://github.com/Jefferson-Henrique/GetOldTweets-python][GetOldTweets scraper]]                                  | Python2   | JSON   | Tweets older than week, more than 72k |
-  | [[http://stackoverflow.com/questions/41684729/anyway-to-increase-twitter-mining-speed][Application of GetOldTweets]] | Python3   | JSON   | Tutorial                              |
-  | [[https://github.com/taspinar/TwitterScraper][TwitterScraper]]                                                       | Python3   | JSON   | Similar to GetOldTweets               |
-  | +[[https://github.com/tweepy/tweepy][Tweepy]]+                                                                       | +Python3+ |        | +Python wrapper for Twitter API+      |
-  | +[[https://github.com/computermacgyver/twitter-python][twitter-python]]+                                             | +Python3+ | +JSON+ | +Sample script based on tweepy+       |
-  | +[[http://stats.seandolinar.com/collecting-twitter-data-using-a-python-stream-listener/][twitter-python sample]]+    | +Python3+ |        | +another sample+                      |
+  |                                                        Source                                                        |  Language |    Output    |                Summary                |
+  |----------------------------------------------------------------------------------------------------------------------|-----------|--------------|---------------------------------------|
+  | [[https://github.com/Jefferson-Henrique/GetOldTweets-python][GetOldTweets scraper]]                                  | Python2   | JSON         | Tweets older than week, more than 72k |
+  | [[http://stackoverflow.com/questions/41684729/anyway-to-increase-twitter-mining-speed][Application of GetOldTweets]] | Python3   | JSON         | Tutorial                              |
+  | [[https://github.com/taspinar/TwitterScraper][TwitterScraper]]                                                       | Python3   | JSON         | Similar to GetOldTweets               |
+  | +[[https://github.com/tweepy/tweepy][Tweepy]]+                                                                       | +Python3+ |              | +Python wrapper for Twitter API+      |
+  | +[[https://github.com/computermacgyver/twitter-python][twitter-python]]+                                             | +Python3+ | +JSON+       | +Sample script based on tweepy+       |
+  | +[[http://stats.seandolinar.com/collecting-twitter-data-using-a-python-stream-listener/][twitter-python sample]]+    | +Python3+ |              | +another sample+                      |
+  | [[https://archive.org/details/twitterstream?sort=-date][Archive Team: The Twitter Stream Grab]]                      | -         | tar, torrent | Huge Twitter dump, 45GB per month                                      |
 
 *** Other sources
 

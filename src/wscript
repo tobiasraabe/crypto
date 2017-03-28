@@ -1,4 +1,4 @@
-#! python
+#!/usr/bin/env python3
 
 
 def build(ctx):
@@ -16,5 +16,7 @@ def build(ctx):
 
     ctx.add_group()
 
+    ctx.recurse('analysis')
+
     # ctx.recurse('paper')
-    ctx.recurse('documentation')
+    # ctx.recurse('documentation')

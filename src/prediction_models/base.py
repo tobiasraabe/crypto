@@ -5,6 +5,11 @@ defined prediction model class has to inherit from this class to be certain
 that all necessary functions are defined and the model fits into the existing
 code.
 
+The structure of the class is derived from scikit-learn's structure of
+estimators. The advantage of that design is that the estimator can be used like
+a scikit-learn estimator (e.g. in a pipeline).
+
+
 Note
 ----
 Abstract Base Classes are used to enforce rigour in programs which provide
@@ -20,10 +25,41 @@ from abc import abstractmethod
 
 
 class BasePredictionModel(ABC):
+
     @abstractmethod
-    def predict(self):
+    def __init__(self):
+        """The init method creates placeholders for all necessary variables on
+        instantiation.
+
+        """
         pass
 
     @abstractmethod
-    def cross_validation(self):
+    def fit(self, y, X, argument):
+        """The fit method collects all possible arguments and fits the model to
+        the data.
+
+        Arguments
+        ---------
+        y : array
+            An array containing the target values
+        X : matrix
+            A matrix representation of features
+        argument : int, str, ...
+            An argument specifying the kind of model fit
+
+        """
+        pass
+
+    @abstractmethod
+    def predict(self, X):
+        """The predict method returns predictions based on the fitted model for
+        the new inputs.
+
+        Returns
+        -------
+        y : array
+            An array containing target values for new inputs
+
+        """
         pass

@@ -17,8 +17,11 @@ def set_project_paths(ctx):
     pp['IN_DATA_COLLECTION'] = 'src/data_collection'
     pp['IN_DATA_COLLECTION_MOCK'] = 'src/data_collection_mock'
     pp['IN_DATA_PREPROCESSING'] = 'src/data_preprocessing'
-    pp['OUT_DATA_RAW'] = '{}/out/data_raw'.format(out)  # Does not work!!!
+    pp['IN_PREDICTION_MODELS'] = 'src/prediction_models'
+    pp['IN_ANALYSIS'] = 'src/analysis'
+    pp['OUT_DATA_RAW'] = '{}/out/data_raw'.format(out)
     pp['OUT_DATA_PROCESSED'] = '{}/out/data_processed'.format(out)
+    pp['OUT_ANALYSIS'] = '{}/out/analysis'.format(out)
     pp['IN_STATIC'] = 'src/static'
 
     # Convert the directories into Waf nodes.

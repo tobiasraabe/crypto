@@ -1,18 +1,35 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
+import yaml
+import os
+
+
+PATH_MA_CONFIG = os.path.join('src', 'analysis', 'ma.yml')
 
 
 def build(ctx):
 
-    ctx(
-        features='run_py_script',
-        source='schelling.py',
-        deps=[
-            ctx.path_to(ctx, 'OUT_DATA_PROCESSED', 'initial_locations.csv'),
-        ],
-        target=[
-            ctx.path_to(ctx, 'OUT_ANALYSIS', 'schelling_{}.pickle'.format(model)),
-            ctx.path_to(ctx, 'OUT_ANALYSIS', 'log', 'schelling_{}.log'.format(model))
-        ],
-        append=model,
-        name='schelling_{}'.format(model)
-    )
+    with open(PATH_MA_CONFIG) as file:
+        ma_conf = yaml.load(file.read())
+
+    for key in ma_conf:
+        for fast, slow in ma_conf[key]:
+
+            ctx(
+                features='run_py_script',
+                source=ctx.path_to(ctx, 'IN_ANALYSIS', 'ma.py'),
+                deps=[
+                    ctx.path_to(
+                        ctx, 'IN_PREDICTION_MODELS', 'moving_average.py'),
+                    ctx.path_to(
+                        ctx, 'IN_ANALYSIS', 'ma.yml'),
+                    ctx.path_to(
+                        ctx, 'OUT_DATA_PROCESSED', '{}_chart_data.p.lzma'
+                        .format(key))
+                ],
+                # target=ctx.path_to(
+                #     ctx, 'OUT_ANAlYSIS', 'results_ma_{}_{}_{}.txt'
+                #     .format(key, fast, slow)),
+                append=[key, str(fast), str(slow)],
+                name='analysis',
+            )
