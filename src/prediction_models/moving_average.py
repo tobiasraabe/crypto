@@ -6,9 +6,10 @@
 
 import numpy as np
 
+import warnings
+
 from ..utils.statistics import moving_average
 from .base import BasePredictionModel
-from sklearn.base import BaseEstimator
 
 
 class MovingAverage(BasePredictionModel):
@@ -55,7 +56,9 @@ class MovingAverage(BasePredictionModel):
         self.ma_fast = moving_average(array=y, window=window_fast)
         self.ma_slow = moving_average(array=y, window=window_slow)
         # Vectorized if-else condition to calculate bullish or bearish periods
-        self.regimes = np.where(self.ma_fast - self.ma_slow > 0, 1, 0)
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore')
+            self.regimes = np.where(self.ma_fast - self.ma_slow > 0, 1, 0)
         # Vector containing signals to buy, halt, sell (1, 0, -1)
         self.signals = self.regimes - np.roll(self.regimes, 1)
         # np.roll places the last values at the beginning which has no meaning

@@ -4,7 +4,7 @@
 
 """
 
-import matplotlib.plt as plt
+import matplotlib.pyplot as plt
 import seaborn
 import sys
 
