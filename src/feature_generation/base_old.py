@@ -39,7 +39,7 @@ class BaseFeatureGenerator(ABC):
         """The fit method collects all possible arguments and prepares the data
         for the transformation.
 
-        Arguments
+        Parameters
         ---------
         X : matrix
             An object which is prepared for transformation

@@ -4,10 +4,14 @@
 
 """
 
-from src.prediction_models.moving_average import MovingAverage
+import matplotlib.plt as plt
+import seaborn
 import sys
-from sklearn.externals import joblib
+
 from bld.project_paths import project_paths_join as ppj
+from sklearn.externals import joblib
+from src.prediction_models.moving_average import MovingAverage
+from src.prediction_models.scorer import moving_average_score
 
 
 if __name__ == '__main__':
@@ -21,5 +25,7 @@ if __name__ == '__main__':
 
     ma = MovingAverage()
     ma = ma.fit(y=y, window_fast=fast, window_slow=slow)
-    ma = ma.evaluate()
-    print(ma)
+    results = ma.predict()
+    moving_average_score(y, results)
+
+    # Generate graphics for regimes, signals, profits

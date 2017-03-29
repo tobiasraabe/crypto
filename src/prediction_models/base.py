@@ -39,7 +39,7 @@ class BasePredictionModel(ABC):
         """The fit method collects all possible arguments and fits the model to
         the data.
 
-        Arguments
+        Parameters
         ---------
         y : array
             An array containing the target values

@@ -7,12 +7,20 @@ Then, the classes can be used as parts of scikit-learn pipeline.
 
 """
 
-import pandas as pd
+import numpy as np
 
 from sklearn.base import TransformerMixin
+from ..utils.statistics import moving_average
 
 
 class MovingAverages(TransformerMixin):
+    """
+
+    Todo
+    ----
+    - Find better replacement of ``np.NaN`` in :func:`def transform` than 0
+
+    """
 
     def __init__(self, windows=[20, 50]):
         self.windows = windows
@@ -21,17 +29,15 @@ class MovingAverages(TransformerMixin):
         return self
 
     def transform(self, x, y=None):
-        # Construct container
-        x_transformed = pd.DataFrame()
-        # Construct moving averages
+        # Initialise container
+        a = np.empty(self.windows)
+        # Create moving averages
         for i, window in enumerate(self.windows):
-            pd.concat([x, x_transformed,
-                       pd.Series(x.rolling(window=window).mean(),
-                                 name='MA_{}'.format(window))], axis=1)
+            a[i] = moving_average(x, window=window)
+        # Convert ``np.NaN`` to numerics
+        a = np.nan_to_num(a)
 
-        x_transformed.fillna(value=0, inplace=True)
-
-        return x_transformed
+        return a
 
 
 class LaggedTerms(TransformerMixin):

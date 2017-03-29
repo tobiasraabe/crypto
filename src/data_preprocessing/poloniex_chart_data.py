@@ -13,16 +13,16 @@ def dateparse(time_in_secs):
     return datetime.datetime.fromtimestamp(float(time_in_secs))
 
 
-def create_lags(ts, lags=1):
-    lag = 1
-    ts_lagged = pd.DataFrame()
-    while lag <= lags:
-        ts_shifted = ts.shift(-lag)
-        ts_shifted.columns = [
-            i + '_lag_{}'.format(lag) for i in ts_shifted.columns]
-        ts_lagged = pd.concat([ts_lagged, ts_shifted], axis=1)
-        lag += 1
-    return ts_lagged.dropna()
+# def create_lags(ts, lags=1):
+#     lag = 1
+#     ts_lagged = pd.DataFrame()
+#     while lag <= lags:
+#         ts_shifted = ts.shift(-lag)
+#         ts_shifted.columns = [
+#             i + '_lag_{}'.format(lag) for i in ts_shifted.columns]
+#         ts_lagged = pd.concat([ts_lagged, ts_shifted], axis=1)
+#         lag += 1
+#     return ts_lagged.dropna()
 
 
 def main(key: str, lags: int):
@@ -53,10 +53,10 @@ def main(key: str, lags: int):
     ts = ts[~ ts.index.duplicated()]
 
     # Create lagged variables
-    ts_lagged = create_lags(ts.drop('close', axis=1), lags)
+    # ts_lagged = create_lags(ts.drop('close', axis=1), lags)
 
     # Concat lagged independent variables and drop NANs
-    ts = pd.concat([ts.close, ts_lagged], axis=1).dropna()
+    # ts = pd.concat([ts.close, ts_lagged], axis=1).dropna()
 
     # Make column names uppercase and append key
     ts.columns = map(str.upper, ts.columns)

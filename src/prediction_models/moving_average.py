@@ -5,9 +5,10 @@
 """
 
 import numpy as np
-import pandas as pd
 
+from ..utils.statistics import moving_average
 from .base import BasePredictionModel
+from sklearn.base import BaseEstimator
 
 
 class MovingAverage(BasePredictionModel):
@@ -19,7 +20,7 @@ class MovingAverage(BasePredictionModel):
         self.regimes = None
         self.signals = None
 
-    def fit(self, y, window_fast=12 * 24 * 20, window_slow=12 * 24 * 50):
+    def fit(self, y, window_fast: int = 5, window_slow: int = 10):
         """The fit method calculates the moving averages, identifies regimes
         (bearish or bullish periods), and calculates signals.
 
@@ -29,7 +30,7 @@ class MovingAverage(BasePredictionModel):
         with five minute intervals. To create a 20-day moving average, one has
         to consider 12 * 24 * 20 observations.
 
-        Arguments
+        Parameters
         ---------
         window_fast : int
             Integer indicating the length of the first moving average
@@ -41,10 +42,6 @@ class MovingAverage(BasePredictionModel):
         - Find a better solution to fix the problems of integer NaNs than -2
 
         """
-        self.y = y
-        # Calculate rolling means
-        self.ma_fast = self.y.rolling(window=window_fast).mean()
-        self.ma_slow = self.y.rolling(window=window_slow).mean()
         # Assert that there is enough data available
         assert window_fast < window_slow, (
             'The interval of the first moving average is bigger than the'
@@ -52,6 +49,11 @@ class MovingAverage(BasePredictionModel):
         assert y.shape[0] > window_slow, (
             'The interval of the second moving average is larger than the'
             'data.')
+        # Convert input to pd.Series to make use of rolling mean
+        self.y = y
+        # Calculate rolling means
+        self.ma_fast = moving_average(array=y, window=window_fast)
+        self.ma_slow = moving_average(array=y, window=window_slow)
         # Vectorized if-else condition to calculate bullish or bearish periods
         self.regimes = np.where(self.ma_fast - self.ma_slow > 0, 1, 0)
         # Vector containing signals to buy, halt, sell (1, 0, -1)
@@ -59,7 +61,7 @@ class MovingAverage(BasePredictionModel):
         # np.roll places the last values at the beginning which has no meaning
         # in this case. It would be better to cast the values to np.NaN, but
         # that is not allowed in integer arrays. Therefore, we will use -2.
-        self.signals[:1] = -2
+        self.signals[0] = -2
 
         return self
 
@@ -73,37 +75,10 @@ class MovingAverage(BasePredictionModel):
         trade position should be hold and 1 indicates a bullish period, meaning
         buying.
 
-        Return
-        ------
-        self.signals : array
+        Returns
+        -------
+        self.signals : np.array
             Array of signals for trade actions
 
         """
         return self.signals
-
-    def evaluate(self):
-        """This method calculates the percentage of returns for the calculated
-        signals.
-
-        Todo
-        ----
-        I do not know whether this function should be placed here or else.
-        Maybe we should better refactor every evaluations.
-
-        Return
-        ------
-        cum_returns : float
-            Float indicating the sum of returns for trades by signals
-
-        """
-        # Focus on trades (np.array([BTC_POT_CLOSE, SIGNALS]))
-        trades = np.array([
-            self.y.loc[(self.signals == -1) | (self.signals == 1)],
-            self.signals[(self.signals == -1) | (self.signals == 1)]
-        ])
-        # Calculates returns
-        returns = (trades[0] - np.roll(trades[0], 1)) / trades[0]
-        # Use only returns on sells and calculate sum
-        cum_returns = sum(returns[trades[1] == -1])
-
-        return cum_returns
