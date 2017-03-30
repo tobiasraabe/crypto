@@ -12,6 +12,7 @@ from bld.project_paths import project_paths_join as ppj
 from sklearn.externals import joblib
 from src.prediction_models.long_short_term import Lstm
 from src.prediction_models.scorer import portfolio_score
+from src.prediction_models.scorer import roc_score
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
 import numpy
@@ -80,5 +81,21 @@ if __name__ == '__main__':
     lstmresults = lstmfit.predict(ds)
 
     # feeding into portfolio_score
-    portfolio_score(dfOut.as_matrix().shape, lstmresults)
+    #portfolio_score(dfOut.as_matrix().shape, lstmresults)
+
+    # plotting creator operator characteristic for up and down changes in
+    # 'buy' transactions
+
+    posfpr, postpr, posroc_auc, negfpr, negtpr, negroc_auc = roc_score(dfOut.as_matrix(),lstmresults)
+
+    plt.title('Receiver Operating Characteristic')
+    plt.plot(posfpr, postpr, 'b', label = '"up" AUC = %0.2f' % posroc_auc)
+    plt.plot(negfpr, negtpr, 'b', label = '"down" AUC = %0.2f' % negroc_auc)
+    plt.legend(loc = 'lower right')
+    plt.plot([0, 1], [0, 1],'r--')
+    plt.xlim([0, 1])
+    plt.ylim([0, 1])
+    plt.ylabel('True Positive Rate')
+    plt.xlabel('False Positive Rate')
+    plt.show()
 

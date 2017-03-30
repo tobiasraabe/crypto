@@ -56,6 +56,8 @@ Todo
 
 import numpy as np
 from sklearn.metrics.scorer import make_scorer
+from sklearn.metrics import roc_curve, auc
+import matplotlib.pyplot as plt
 
 
 def moving_average_score(truth, prediction):
@@ -123,3 +125,24 @@ def portfolio_score(truth, prediction):
 
 
 portfolio_scorer = make_scorer(portfolio_score, greater_is_better=True)
+
+
+def roc_score(truth, prediction, direction: str = "up"):
+    """This create a graphical representation based on a ROC curve
+    from predicted and observed buying price rates.
+
+    Returns R plot estimates. """
+
+    posBinTruth = np.where(truth > 0, 1, 0)
+    posBinPred = np.where(prediction > 0, 1, 0)
+    negBinTruth = np.where(truth < 0, 1, 0)
+    negBinPred = np.where(prediction < 0, 1, 0)
+
+    posfpr, postpr, threshold = roc_curve(posBinTruth, negBinPred)
+    posroc_auc = auc(posfpr, postpr)
+    negfpr, negtpr, threshold = roc_curve(negBinTruth, negBinPred)
+    negroc_auc = auc(negfpr, negtpr)
+
+    return posfpr, postpr, posroc_auc, negfpr, negtpr, negroc_auc
+
+
