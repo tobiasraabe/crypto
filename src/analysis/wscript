@@ -27,9 +27,14 @@ def build(ctx):
                         ctx, 'OUT_DATA_PROCESSED', '{}_chart_data.p.lzma'
                         .format(key))
                 ],
-                # target=ctx.path_to(
-                #     ctx, 'OUT_ANAlYSIS', 'results_ma_{}_{}_{}.txt'
-                #     .format(key, fast, slow)),
+                target=[
+                    ctx.path_to(
+                        ctx, 'OUT_FIGURES', 'ma_signal_regime_{}_{}_{}.png'
+                        .format(key, fast / 12 / 24, slow / 12 / 24)),
+                    ctx.path_to(
+                        ctx, 'OUT_FIGURES', 'ma_price_{}_{}_{}.png'
+                        .format(key, fast / 12 / 24, slow / 12 / 24))
+                ],
                 append=[key, str(fast), str(slow)],
                 name='analysis',
             )

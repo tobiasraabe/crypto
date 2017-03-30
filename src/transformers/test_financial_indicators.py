@@ -17,7 +17,7 @@ def ma_class():
 @pytest.mark.parametrize('array,windows', [
     (np.arange(25), [20]),
     (np.arange(100), [20])
-    (np.array([np.arange(25), np.arange(25)]), [20])  # Currently, no matrix
+    # (np.array([np.arange(25), np.arange(25)]), [20])  # Currently, no matrix
 ])
 def test_MovingAverage(ma_class, array, windows):
     ma = ma_class

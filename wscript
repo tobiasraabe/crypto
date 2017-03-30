@@ -19,9 +19,11 @@ def set_project_paths(ctx):
     pp['IN_DATA_PREPROCESSING'] = 'src/data_preprocessing'
     pp['IN_PREDICTION_MODELS'] = 'src/prediction_models'
     pp['IN_ANALYSIS'] = 'src/analysis'
+    pp['IN_TRANSFORMERS'] = 'src/transformers'
+    pp['IN_UTILS'] = 'src/utils'
     pp['OUT_DATA_RAW'] = '{}/out/data_raw'.format(out)
     pp['OUT_DATA_PROCESSED'] = '{}/out/data_processed'.format(out)
-    pp['OUT_ANALYSIS'] = '{}/out/analysis'.format(out)
+    pp['OUT_FIGURES'] = '{}/out/figures'.format(out)
     pp['IN_STATIC'] = 'src/static'
 
     # Convert the directories into Waf nodes.
