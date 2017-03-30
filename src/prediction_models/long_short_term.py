@@ -21,8 +21,6 @@ class Lstm(BaseEstimator):
     def fit(self,df,Y,layers: int = 4, lags: int = 3,reduce: int = 1000,
             iterations: int = 10):
 
-        self.dfOut = Y
-
         # sequential model
         self.modelR = Sequential()
         # type of model, layer and input declaration

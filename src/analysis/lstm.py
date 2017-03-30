@@ -25,9 +25,11 @@ if __name__ == '__main__':
     reduce = int(sys.argv[4])
     iterations = int(sys.argv[5])
 
+    # load dataset
     df = joblib.load(
         ppj('OUT_DATA_PROCESSED','{}_trade_history.p.lzma'.format(key)))
 
+    # reduce dataframe to only 'buy' transactions as those drive the price
     df = df.query('BTC_POT_TYPE == "buy"')
 
     # create time difference between 2 transactions
@@ -60,6 +62,8 @@ if __name__ == '__main__':
     # remove first 3 vars RATE TOTAL deltat because not useful
     df = df.iloc[:,3:-1]
 
+    # applying scaler to dataframe to improve gradient descent
+    # output is numpy array
     scaler = MinMaxScaler(feature_range=(-1,1))
     ds = scaler.fit_transform(df)
 
@@ -67,11 +71,14 @@ if __name__ == '__main__':
     ds = numpy.reshape(ds, (ds.shape[0], 1, ds.shape[1]))
 
 
+    # assigning fitting function
     longstm = Lstm()
     lstmfit = longstm.fit(df=ds,Y=dfOut,layers=layers,lags=lags,
                               reduce=reduce, iterations=iterations)
 
+    # predict results from LSTM
     lstmresults = lstmfit.predict(ds)
 
+    # feeding into portfolio_score
     portfolio_score(dfOut.as_matrix().shape, lstmresults)
 
