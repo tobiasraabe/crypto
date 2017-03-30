@@ -8,15 +8,20 @@ Predicting changes in buying prices using a 4 level LSTM Neural Network
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense, LSTM
-from keras.layers import LSTM
 import pandas as pd
 import numpy
-from .base import BasePredictionModel
+from sklearn.base import BaseEstimator
 
 
-def Lstm(BasePredictionModel):
+def Lstm(BaseEstimator):
 
     def __init__(self):
+
+        self.layers = 4
+        self.trans_type = "buy"
+        self.lags = 3
+        self.reduce = 2000
+        self.iterations = 10
 
     def transform(self,df,layers,trans_type,lags,reduce):
 
@@ -47,7 +52,7 @@ def Lstm(BasePredictionModel):
             df = df.dropna(axis=0,how="any")
 
             # allow for dataset reduction because of time constraints
-            if reduce not None:
+            if reduce is not None:
                 df = df.iloc[0:reduce,:]
 
                 # move outcome var to separate df
@@ -67,10 +72,10 @@ def Lstm(BasePredictionModel):
 
         return ds, dfOut
 
-    def fit(self,df,layers=4,trans_type="buy",lags=3,reduce=None,iterations=10):
+    def fit(self,df):
 
         """Model fitting"""
-        ds, dfOut = self.transform(df,layers,trans_type,lags,reduce)
+        ds, dfOut = self.transform(df,self.layers,self.trans_type,self.lags,self.reduce)
 
         # sequential model
         modelR = Sequential()
@@ -79,14 +84,12 @@ def Lstm(BasePredictionModel):
         modelR.add(Dense(1))
         modelR.compile(loss='mean_squared_error', optimizer='adam')
         # model fit
-        modelR.fit(ds, dfOut, epochs=iterations, batch_size=1, verbose=2)
+        self.model = modelR.fit(ds, dfOut, epochs=self.iterations, batch_size=1, verbose=2)
 
-        # predict based on model
-        predictOut = modelR.predict(ds)
+        return self
 
-        return predictOut
-
-    def predict(self):
+    def predict(self,x):
         """Prediction method. returns array of predictionf change"""
 
-        return self.values
+        # predict based on model
+        return self.model.predict(ds)

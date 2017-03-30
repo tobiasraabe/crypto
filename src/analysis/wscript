@@ -40,7 +40,7 @@ def build(ctx):
         lstm_conf = yaml.load(file.read())
 
     for key in lstm_conf:
-        for layers, trans_type, lags, reduce, iterations in lstm_conf[key]:
+        for layers, lags, reduce, iterations in lstm_conf[key]:
 
             ctx(
                 features='run_py_script',
@@ -55,7 +55,7 @@ def build(ctx):
                         .format(key))
                 ],
 
-                append=[key, str(layers), str(trans_type), str(lags),
-                        str(reduce), str(iterations)],
+                append=[key, str(layers), str(lags), str(reduce),
+                        str(iterations)],
                 name='analysis',
             )
