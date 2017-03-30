@@ -1,0 +1,18 @@
+# This is the config file for the moving averages crossover strategy.
+
+# First, wrap your strategy by an identifier of the pair names. This key will
+# be used to find the appropriate processed data (e.g.
+# ``<key>_chart_data.p.lzma``).
+
+# After that, define each strategy with an array containing two values where
+# the first value indicates the windows size of faster moving average and the
+# second value represents the slower moving average.
+
+# Note that, the chart data contains five-minute intervals. If you want to
+# determine a 20-day window you have to insert 5760 (12*24*20).
+
+BTC_POT:
+# [4 layers, "buy" transactions, 3 lags, 2000 observations, 10 iterations]
+  - [4, "buy", 3, 2000, 10]  
+# [5 layers, "buy" transactions, 5 lags, 2000 observations, 10 iterations]
+  - [5, "buy", 5, 2000 ,10]  

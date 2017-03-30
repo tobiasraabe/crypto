@@ -5,7 +5,7 @@ import os
 
 
 PATH_MA_CONFIG = os.path.join('src', 'analysis', 'ma.yml')
-
+PATH_LSTM_CONFIG = os.path.join('src', 'analysis', 'lstm.yml')
 
 def build(ctx):
 
@@ -31,5 +31,31 @@ def build(ctx):
                 #     ctx, 'OUT_ANAlYSIS', 'results_ma_{}_{}_{}.txt'
                 #     .format(key, fast, slow)),
                 append=[key, str(fast), str(slow)],
+                name='analysis',
+            )
+
+
+
+    with open(PATH_LSTM_CONFIG) as file:
+        lstm_conf = yaml.load(file.read())
+
+    for key in lstm_conf:
+        for layers, trans_type, lags, reduce, iterations in lstm_conf[key]:
+
+            ctx(
+                features='run_py_script',
+                source=ctx.path_to(ctx, 'IN_ANALYSIS', 'lstm.py'),
+                deps=[
+                    ctx.path_to(
+                        ctx, 'IN_PREDICTION_MODELS', 'long_short_term.py'),
+                    ctx.path_to(
+                        ctx, 'IN_ANALYSIS', 'lstm.yml'),
+                    ctx.path_to(
+                        ctx, 'OUT_DATA_PROCESSED', '{}_trade_history.p.lzma'
+                        .format(key))
+                ],
+
+                append=[key, str(layers), str(trans_type), str(lags),
+                        str(reduce), str(iterations)],
                 name='analysis',
             )
