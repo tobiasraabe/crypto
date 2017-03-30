@@ -4,6 +4,10 @@
 .. but it should at least contain the `toctree` directive.
 
 
+.. role:: raw-tex(raw)
+    :format: latex html
+
+
 Welcome to the Cryptocurrency Market Prediction project's documentation!
 ========================================================================
 
