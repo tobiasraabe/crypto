@@ -7,10 +7,12 @@ Introduction
 
 This is the documentation on the **Cryptocurrency Market Prediction** project.
 
+The project is about price predictions in cryptocurrency markets.
 
-.. _getting_started:
 
-Getting started
-===============
+.. _overview:
 
-Lorem ipsum...
+Overview
+========
+
+Same as in ReadMe

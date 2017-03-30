@@ -11,23 +11,24 @@ run.
 Python Environment
 ==================
 
-For the project to work it is best to use an 3.5.2 or 3.6 Anaconda
+For the project to work it is best to use an 3.5.2 Anaconda
 distribution. This is definitely not lightweight but we encountered several
 problems by creating an environment from file when we wanted to move the
 project to other systems. The problem seems to occur with packages which rely
 on additional C code (i.e. scikit-learn, lxml).
-
-Next, we will need to install an additional package from Github.
-
-.. code-block:: console
-
-    pip3 install git+https://github.com/s4w3d0ff/python-poloniex.git
 
 To install additional packages, run
 
 .. code-block:: console
 
     pip3 install -r requirements.txt
+
+
+WARNING UNSTABLE: To install via Conda environment file, type
+
+.. code-block:: console
+
+    conda env create -f .environment.yml
 
 
 
@@ -41,11 +42,31 @@ You can download the project to your disk by using
     git clone --recursive https://github.com/tobiasraabe/crypto.git
 
 The ``--recursive`` flag is needed to include submodules. If you forgot to do
-that, take a look at :ref:git_submodules.
+that, take a look at git_submodules_.
 
+
+.. _git_submodules:
+
+Git submodules
+==============
+
+The project relies on submodules which are only downloaded if you add the
+recursive flag while cloning the repository. If you forgot to do that or
+forked the submodules and made additional changes, there is a pythonic shortcut
+to recursively update all of your submodules by running
+
+.. code-block:: console
+
+    python3 update.py
+
+
+Useful tools
+============
+
+.. _bfg_cleaner:
 
 Data files
-==========
+----------
 
 In advance one also has to download some data files. Since the data collection
 from Twitter proved to be very time-consuming, it is preferred to download
@@ -65,19 +86,3 @@ afterwards. `BFG Repo-Cleaner`_ will check each commit and then change the ones
 carrying your datasets.
 
 .. _BFG Repo-Cleaner: https://rtyley.github.io/bfg-repo-cleaner/
-
-
-.. git_submodules::
-
-Git submodules
-==============
-
-The project relies on submodules which are only downloaded if you add the
-recursive flag while cloning the repository. If you forgot to do that or
-forked the submodules and made additional changes, there is a pythonic shortcut
-to recursively update all of your submodules by running
-
-.. code-block:: console
-
-    python3 update.py
-
