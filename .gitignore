@@ -68,6 +68,7 @@ ___*
 .env/installed_pip_pkgs
 .env/installed_spec.json
 src/static/*
+*.bib.sav
 
 # Sublime
 *.sublime-project

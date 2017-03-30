@@ -17,6 +17,12 @@ class MovingAverages(TransformerMixin):
     """This class implements a *scikit-learn* transformer class which will
     produce moving averages for a given ``x``.
 
+
+    Parameters
+    ----------
+    windows : arr
+        Array containing interval sizes
+
     Todo
     ----
     - Find better replacement of ``np.NaN`` in :func:`def transform` than 0
@@ -55,20 +61,27 @@ class MovingAverages(TransformerMixin):
 
     def transform(self, x, y=None):
         # Initialise container
-        a = np.empty(self.windows)
-        # Check whether a matrix or an array is passed and create moving
-        # aveages
         if x.ndim == 1:
-            for i, window in enumerate(self.windows):
-                a[i] = moving_average(x, window=window)
+            arr = np.empty(shape=(len(self.windows), x.shape[0]))
         else:
-            for i, x_ in enumerate(x):
+            arr = np.empty(
+                shape=(x.shape[0] * len(self.windows), x.shape[1]))
+        # Check whether a matrix or an array is passed and create moving
+        # averages
+        if x.ndim == 1:
+            if len(self.windows) == 1:
+                arr = moving_average(x, window=self.windows[0])
+            else:
+                for i, window in enumerate(self.windows):
+                    arr[i] = moving_average(x, window=window)
+        else:
+            for x_ in x:
                 for j, window in enumerate(self.windows):
-                    a[i][j] = moving_average(x_, window=window)
+                    arr[j] = moving_average(x_, window=window)
         # Convert ``np.NaN`` to numerics
-        a = np.nan_to_num(a)
+        arr = np.nan_to_num(arr)
 
-        return a
+        return arr
 
 
 class LaggedTerms(TransformerMixin):
