@@ -11,7 +11,7 @@ def build(ctx):
 
     ctx(
         features='run_py_script',
-        source='data_collection_mock.py',
+        source='preparation.py',
         deps=ctx.path_to(
             ctx, 'IN_STATIC', 'stanford_twitter_sentiment_corpus.zip'),
         target=ctx.path_to(

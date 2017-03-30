@@ -1,6 +1,16 @@
 #!/usr/bin/env python3
 
-"""This module provides an moving average crossover strategy.
+"""Moving averages (MA) are widely used indicators in technical analysis that
+help smooth out price action by filtering out the noise from random price
+fluctuations. A moving average is a trend-following or lagging indicator
+because it is based on past prices. The two basic and commonly used MAs are the
+simple moving average (SMA), which is the simple average of a security over a
+defined number of time periods, and the exponential moving average (EMA), which
+gives bigger weight to more recent prices. The most common applications
+of MAs are to identify the trend direction and to determine support and
+resistance levels. While MAs are useful enough on their own, they also
+form the basis for other indicators such as the Moving Average Convergence
+Divergence (MACD).
 
 """
 
@@ -13,6 +23,36 @@ from .base import BasePredictionModel
 
 
 class MovingAverage(BasePredictionModel):
+    """This class provides an estimator which uses moving average crossover
+    strategy with two moving averages where one is considered faster than the
+    other (e.g. a 20-day and a 50-day MA). This is because the MA with the
+    bigger interval is more robust to present price changes than the other.
+
+    Both averages will give indicators on when it is profitable to buy and to
+    sell. An indicator to sell is if the 20-day MA crosses the 50-day MA from
+    below and an indicator to sell if the 20-day MA crosses the 50-day MA from
+    above.
+
+    The indicators are called signals and are returned by the estimator with
+    the ``predict()`` method.
+
+
+    Attributes
+    ----------
+    y : pd.Series/np.array
+        An array of prices
+    ma_fast : np.array
+        An array containing the MA with smaller interval
+    ma_slow : np.array
+        An array containing the MA with bigger interval
+    regimes : np.array
+        A vectorized if-else condition with 1 for ``ma_fast > ma_slow`` and 0
+        for ``ma_fast <= ma_slow``
+    signals : np.array
+        An array of signals where 1 calls for buying and -1 for selling
+
+
+    """
 
     def __init__(self):
         self.y = None
@@ -80,8 +120,8 @@ class MovingAverage(BasePredictionModel):
 
         Returns
         -------
-        self.signals : np.array
-            Array of signals for trade actions
+        signals : np.array
+            An array of signals where 1 calls for buying and -1 for selling
 
         """
         return self.signals

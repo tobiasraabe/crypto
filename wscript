@@ -14,8 +14,8 @@ def set_project_paths(ctx):
 
     pp = {}
     pp['PROJECT_ROOT'] = '.'
+    pp['IN_PREPARATION'] = 'src/preparation'
     pp['IN_DATA_COLLECTION'] = 'src/data_collection'
-    pp['IN_DATA_COLLECTION_MOCK'] = 'src/data_collection_mock'
     pp['IN_DATA_PREPROCESSING'] = 'src/data_preprocessing'
     pp['IN_PREDICTION_MODELS'] = 'src/prediction_models'
     pp['IN_ANALYSIS'] = 'src/analysis'

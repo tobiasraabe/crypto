@@ -4,17 +4,15 @@ import yaml
 import os
 import datetime
 
-# YESTERDAY is necessary since the twitter API does not allow to specify
-# hours, etc. and we do not want to skip tweets
+
 YESTERDAY = (datetime.datetime.utcnow() - datetime.timedelta(days=1)).date()
 TODAY = datetime.datetime.utcnow().date()
 PATH_DATA_RAW = os.path.join('bld', 'out', 'data_raw')
 PATH_TWITTER_CONFIG_MAIN = os.path.join(
     'src', 'data_collection', 'Twitter', 'twitter_config.yml')
-PATH_DATA_COLLECTION_MOCK = os.path.join(
-    'src', 'data_collection_mock')
+PATH_PREPARATION = os.path.join('src', 'preparation')
 PATH_TWITTER_CONFIG_MOCK = os.path.join(
-    PATH_DATA_COLLECTION_MOCK, 'mock.yml')
+    PATH_PREPARATION, 'preparation_config.yml')
 
 
 def twitter_timeframe(indicator: str, start: str) -> list:
@@ -47,7 +45,7 @@ def halves(year: int) -> list:
     return arr
 
 
-def weeks(dt: datetime.date, until: datetime.date=YESTERDAY) -> list:
+def weeks(dt: datetime.date, until: datetime.date = TODAY) -> list:
     arr = []
     dt = dt - datetime.timedelta(days=dt.weekday())
 
@@ -58,7 +56,7 @@ def weeks(dt: datetime.date, until: datetime.date=YESTERDAY) -> list:
         ))
         dt += datetime.timedelta(weeks=1)
     arr.append((
-        str(dt), str(YESTERDAY),
+        str(dt), str(TODAY),
         '{}_{}_partial'.format(dt.isocalendar()[0], dt.isocalendar()[1])
     ))
 

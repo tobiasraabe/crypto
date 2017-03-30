@@ -73,6 +73,11 @@ def moving_average_score(truth, prediction):
       becomes an sklearn estimator. Hell yeah...
 
     """
+    # Make sure that all trades are completed. If the sum would be -2 than all
+    # trades are complete (+-0) and there is only the -2 left which represents
+    # np.NaN.
+    if sum(prediction) == -1:
+        prediction[-1] = -1
     # Focus on trades (np.array([BTC_POT_CLOSE, SIGNALS]))
     trades = np.array([
         truth[(prediction == -1) | (prediction == 1)],

@@ -11,7 +11,7 @@ import sys
 from bld.project_paths import project_paths_join as ppj
 from sklearn.externals import joblib
 from src.prediction_models.moving_average import MovingAverage
-from src.prediction_models.scorer import moving_average_score
+from src.metrics.scorer import moving_average_score
 
 
 if __name__ == '__main__':

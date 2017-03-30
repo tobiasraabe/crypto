@@ -4,7 +4,7 @@
 def build(ctx):
     # The mock is used to speed up data collection. Recent datasets are still
     # collected but past datasets are taken from ``static``.
-    ctx.recurse('data_collection_mock')
+    ctx.recurse('preparation')
 
     ctx.add_group()
 

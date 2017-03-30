@@ -1,5 +1,26 @@
 #!/usr/bin/env python
 
+"""`Poloniex <https://poloniex.com/>`_  is a US-based cryptocurrency exchange
+and the source of price data. Poloniex offers a pulbic API which can handle
+HTTP GET requests and answers via ``json`` data structures.
+
+There are two sources of data available for all periods since Potcoin came into
+existence on Poloniex:
+
+1. Chart data with high, low, close, and open prices, a weighted average
+   and volume, quote volume
+2. Trade history with ids, trade type, amount, rate, and total
+
+Since this module heavily relies on HTTP requests, it is natural that sometimes
+requests are not answered which are still valid. Therefore, we implemented
+a decorator, ``def retry_request``, to retry requests which should be obviously
+valid. This ensures that everything works 90% of the time.
+
+Other data is also available as a live ticker and has to be continuously
+scraped which is currently not implemented.
+
+"""
+
 import datetime
 import os
 import pandas as pd
@@ -56,6 +77,7 @@ class PoloniexDataManager:
     ----------
     key : str
         Poloniex identifier of a currency pair
+
 
     Attributes
     ----------
@@ -219,7 +241,8 @@ class PoloniexDataManager:
 
         Todo
         ----
-        - Is there general solution for adjusting the period?
+        - Is there general solution for adjusting the period, meaning an
+          algorithm?
 
 
         Parameters
