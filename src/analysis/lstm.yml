@@ -13,6 +13,6 @@
 
 BTC_POT:
 # [4 layers, 3 lags, 2000 observations, 10 iterations]
-  - [4, 3, 50, 10]  
+  - [4, 3, 2000, 10]  
 # [5 layers, 5 lags, 2000 observations, 10 iterations]
-  - [5, 5, 50 ,10]  
+  - [5, 5, 2000 ,10]  
