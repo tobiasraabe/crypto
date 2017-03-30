@@ -68,8 +68,10 @@ if __name__ == '__main__':
 
 
     longstm = Lstm()
-    lstmresults = longstm.fit(df=ds,Y=dfOut,layers=layers,lags=lags,
+    lstmfit = longstm.fit(df=ds,Y=dfOut,layers=layers,lags=lags,
                               reduce=reduce, iterations=iterations)
 
-    portfolio_score(dfOut, lstmresults)
+    lstmresults = lstmfit.predict(ds)
+
+    portfolio_score(dfOut.as_matrix().shape, lstmresults)
 

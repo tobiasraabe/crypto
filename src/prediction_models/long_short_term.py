@@ -24,18 +24,18 @@ class Lstm(BaseEstimator):
         self.dfOut = Y
 
         # sequential model
-        modelR = Sequential()
+        self.modelR = Sequential()
         # type of model, layer and input declaration
-        modelR.add(LSTM(layers, input_shape=(None,lags*2)))
-        modelR.add(Dense(1))
-        modelR.compile(loss='mean_squared_error', optimizer='adam')
+        self.modelR.add(LSTM(layers, input_shape=(None,lags*2)))
+        self.modelR.add(Dense(1))
+        self.modelR.compile(loss='mean_squared_error', optimizer='adam')
         # model fit
-        self.model = modelR.fit(df, Y, epochs=iterations, batch_size=1, verbose=2)
+        self.modelR.fit(df, Y, epochs=iterations, batch_size=1, verbose=2)
 
         return self
 
-    def predict(self,x):
+    def predict(self,ds):
         """Prediction method. returns array of predictionf change"""
 
         # predict based on model
-        return self.model.predict(df)
+        return self.modelR.predict(ds)
