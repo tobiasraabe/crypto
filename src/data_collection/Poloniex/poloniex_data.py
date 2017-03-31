@@ -135,9 +135,7 @@ class PoloniexDataManager:
     def generate_trade_history(self):
         """Wraps the entire process of generating the trade history.
 
-
         """
-
         # Load configuration
         try:
             with open(self.path_config_temp) as file:
@@ -188,34 +186,14 @@ class PoloniexDataManager:
         """
 
         # Load configuration
-        try:
-            with open(self.path_config_temp) as file:
-                config_temp = yaml.load(file.read())
-                self.start = config_temp['chart_data']['END_DATE']
-        except (FileNotFoundError, KeyError):
-            with open(self.path_config_main) as file:
-                config_main = yaml.load(file.read())
-            self.start = config_main[self.key]['START_DATE']
+        with open(self.path_config_main) as file:
+            config_main = yaml.load(file.read())
+        self.start = config_main[self.key]['START_DATE']
 
         # Collect data
         print('START: Generating data for {} - Chart Data'
               .format(self.key))
         self.gen_cd()
-
-        # Save new configuration
-        try:
-            with open(ppj('OUT_DATA_RAW', '{}.yml'
-                          .format(self.key)), 'r+') as file:
-                temp = yaml.load(file.read())
-                if temp is None:
-                    raise FileNotFoundError
-                temp.update({'chart_data': {'END_DATE': self.start}})
-                yaml.dump(temp, file)
-        except FileNotFoundError:
-            with open(ppj('OUT_DATA_RAW', '{}.yml'
-                          .format(self.key)), 'w') as file:
-                yaml.dump({'chart_data': {'END_DATE': END_DATE}}, file)
-
         print('SUCCESS: Created {} - Chart Data'.format(self.key))
 
     def validate_period(self, multiplicator=1) -> int:
@@ -350,20 +328,11 @@ class PoloniexDataManager:
         df = pd.DataFrame(
             retry_request(
                 polo.returnChartData)(
-                self.key, period=300, start=self.start, end=END_DATE)
+                self.key, period=300, start=self.start, end=9999999999)
         )
 
-        time.sleep(DELAY)
-
-        if os.path.isfile(path_data):
-            header_bool = False
-            print('Data was appended')
-        else:
-            header_bool = True
-            print('Dataset was created.')
-        with open(path_data, 'a') as file:
-            df.to_csv(
-                file, index=False, header=header_bool, columns=df.columns)
+        df.to_csv(path_data, index=False, columns=df.columns)
+        print('SUCCESS: Chart dataset was created.')
 
     def __call__(self):
         self.generate_trade_history()

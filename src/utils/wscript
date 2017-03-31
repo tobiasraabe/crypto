@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+
+
+def build(ctx):
+    # # Tests
+    ctx(
+        features='run_py_script',
+        source='test_statistics.py',
+        deps=ctx.path_to(
+            ctx, 'IN_UTILS', 'statistics.py')
+    )

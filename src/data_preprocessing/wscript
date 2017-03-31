@@ -22,9 +22,7 @@ def build(ctx):
             source='poloniex_chart_data.py',
             deps=[
                 ctx.path_to(
-                    ctx, 'IN_DATA_PREPROCESSING', 'data_preprocessing.yml'),
-                # ctx.path_to(
-                #     ctx, 'OUT_DATA_RAW', '{}_chart_data.csv'.format(key)),
+                    ctx, 'OUT_DATA_RAW', '{}_chart_data.csv'.format(key)),
             ],
             target=[
                 ctx.path_to(
@@ -43,9 +41,7 @@ def build(ctx):
             source='poloniex_trade_history.py',
             deps=[
                 ctx.path_to(
-                    ctx, 'IN_DATA_PREPROCESSING', 'data_preprocessing.yml'),
-                # ctx.path_to(
-                #     ctx, 'OUT_DATA_RAW', '{}_trade_history.csv'.format(key)),
+                    ctx, 'OUT_DATA_RAW', '{}_trade_history.csv'.format(key)),
             ],
             target=[
                 ctx.path_to(

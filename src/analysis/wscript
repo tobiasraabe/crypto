@@ -30,10 +30,10 @@ def build(ctx):
                 target=[
                     ctx.path_to(
                         ctx, 'OUT_FIGURES', 'ma_signal_regime_{}_{}_{}.png'
-                        .format(key, fast / 12 / 24, slow / 12 / 24)),
+                        .format(key, fast, slow)),
                     ctx.path_to(
                         ctx, 'OUT_FIGURES', 'ma_price_{}_{}_{}.png'
-                        .format(key, fast / 12 / 24, slow / 12 / 24))
+                        .format(key, fast, slow))
                 ],
                 append=[key, str(fast), str(slow)],
                 name='analysis',

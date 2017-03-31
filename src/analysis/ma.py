@@ -5,7 +5,7 @@
 """
 
 import matplotlib.pyplot as plt
-import seaborn
+import seaborn  # noqa: F401
 import sys
 
 from bld.project_paths import project_paths_join as ppj
@@ -53,14 +53,16 @@ def create_regime_signal_graph(df, key, fast, slow):
 if __name__ == '__main__':
     key = sys.argv[1]
     fast = int(sys.argv[2])
+    fast_adj = fast * 12 * 24
     slow = int(sys.argv[3])
+    slow_adj = slow * 12 * 24
 
     data = joblib.load(
         ppj('OUT_DATA_PROCESSED', '{}_chart_data.p.lzma'.format(key)))
     y = data.BTC_POT_CLOSE
 
     ma = MovingAverage()
-    ma = ma.fit(y=y, window_fast=fast, window_slow=slow)
+    ma = ma.fit(y=y, window_fast=fast_adj, window_slow=slow_adj)
     results = ma.predict()
     score = moving_average_score(y, results)
 
@@ -69,8 +71,8 @@ if __name__ == '__main__':
     plot = y.to_frame()
     plot['SIGNALS'] = ma.signals
     plot['REGIMES'] = ma.regimes
-    create_regime_signal_graph(plot, key, (fast / 12 / 24),
-                               int(slow / 12 / 24))
+    create_regime_signal_graph(plot, key, fast,
+                               slow)
 
     trades = plot.BTC_POT_CLOSE[
         (plot.SIGNALS == -1) | (plot.SIGNALS == 1)].reset_index()
@@ -84,5 +86,5 @@ if __name__ == '__main__':
     trades['TO'] = trades.FROM.shift(1)
     trades = trades[trades.index % 2 != 0]
     create_price_trade_graph(
-        trades, plot.BTC_POT_CLOSE, key, (fast / 12 / 24),
-        int(slow / 12 / 24), score)
+        trades, plot.BTC_POT_CLOSE, key, fast,
+        slow, score)

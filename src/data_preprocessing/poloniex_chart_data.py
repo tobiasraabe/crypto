@@ -3,7 +3,6 @@
 import datetime
 import pandas as pd
 import sys
-import yaml
 
 from bld.project_paths import project_paths_join as ppj
 from sklearn.externals import joblib
@@ -13,7 +12,7 @@ def dateparse(time_in_secs):
     return datetime.datetime.fromtimestamp(float(time_in_secs))
 
 
-def main(key: str, lags: int):
+def main(key: str):
     """Preprocesses the chart data for a given currency pair. Furthermore,
     a number of lags is computed according to the argument.
 
@@ -53,7 +52,4 @@ def main(key: str, lags: int):
 if __name__ == '__main__':
     key = sys.argv[1]
 
-    with open(ppj('IN_DATA_PREPROCESSING', 'data_preprocessing.yml')) as file:
-        lags = yaml.load(file.read())['LAGS']
-
-    main(key, lags)
+    main(key)

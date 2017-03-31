@@ -3,7 +3,7 @@
 import numpy as np
 import os
 import pytest
-import requests
+import requests  # noqa: F401
 
 from src.data_collection.Poloniex import poloniex_data
 

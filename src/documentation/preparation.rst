@@ -10,8 +10,8 @@ process, especially Twitter, cannot be done after every
 ``python waf.py distclean``. Therefore, there are two implementations which
 speed up the process and allow to start with previously generated data.
 
-The first one is already mentioned in `installation`_ but we will cover it here
-again. In the main folder of the project is a file called
+The first one is already mentioned in :ref:`installation` but we will cover it
+here again. In the main folder of the project is a file called
 ``download_statics.py`` which will download a bunch of previously generated
 Twitter data since 2014 from shared folder on Dropbox and extract the content
 to ``src/static``. These files will be copied to ``bld/out/data_raw`` before

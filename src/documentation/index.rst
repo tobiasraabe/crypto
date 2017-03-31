@@ -12,8 +12,10 @@ Welcome to the Cryptocurrency Market Prediction project's documentation!
 
     introduction
     installation
+    preparation
     data_collection
     prediction_models
     testing
+    paper
     references
     credits
